@@ -1,0 +1,388 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<section class="constructor-section">
+    <div class="container">
+        <h1 class="constructor-title">КОНСТРУКТОР ОДЕЖДЫ</h1>
+        <p class="constructor-subtitle">здесь вы можете создать прототип изделия и подать заявку на реализацию (НАХОДИТСЯ В РАЗРАБОТКЕ)</p>
+        
+        <div class="constructor-tabs">
+            <button class="tab-btn active" data-type="tshirt">ФУТБОЛКА</button>
+            <button class="tab-btn" data-type="hoodie">БУДЕТ ПОЗЖЕ</button>
+            <button class="tab-btn" data-type="sweatshirt">БУДЕТ ПОЗЖЕ</button>
+            <button class="tab-btn" data-type="dress">БУДЕТ ПОЗЖЕ</button>
+        </div>
+
+        <div class="constructor-grid">
+            <div class="preview-area">
+                <div class="main-image-container">
+                    <div class="product-wrapper">
+                        <img src="{% static 'img/tshirt_front.png' %}" id="product-img" alt="Конструктор">
+                        <div id="color-overlay"></div>
+                        <div id="tie-dye-overlay"></div>
+                        
+                        <div id="print-container" class="draggable-resizable" style="display: none;">
+                            <button id="remove-print-btn" title="Удалить принт">&times;</button>
+                            <img id="print-layer" src="">
+                            <div class="resize-handle top-left"></div>
+                            <div class="resize-handle top-right"></div>
+                            <div class="resize-handle bottom-left"></div>
+                            <div class="resize-handle bottom-right"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="side-previews">
+                    <div class="mini-preview active" data-side="front">
+                        <img src="{% static 'img/tshirt_front.png' %}" class="thumb-img">
+                        <span>ПЕРЕД</span>
+                    </div>
+                    <div class="mini-preview" data-side="back">
+                        <img src="{% static 'img/tshirt_back.png' %}" class="thumb-img">
+                        <span>СПИНА</span>
+                    </div>
+                </div>
+                        
+                <div class="action-buttons">
+                    <button class="btn-outline" id="send-btn">ОТПРАВИТЬ</button>
+                    <button class="btn-outline" id="save-btn">СОХРАНИТЬ</button>
+                </div>
+            </div>
+
+            <div class="controls-panel">
+                <div class="panel-tabs">
+                    <button class="p-tab active" data-tab="product">ПРОДУКТ</button>
+                    <button class="p-tab" data-tab="object">ОБЪЕКТ</button>
+                </div>
+                
+                <div class="panel-content" id="tab-product">
+                    <h3 id="product-name">ФУТБОЛКА</h3>
+                    
+                    <div class="control-group">
+                        <label>Тип кастомизации</label>
+                        <div class="custom-select-buttons">
+                            <button class="select-btn active" data-cust="classic">КЛАССИК</button>
+                            <button class="select-btn" data-cust="tiedye">ТАЙ-ДАЙ</button>
+                            <button class="select-btn" data-cust="painting">РОСПИСЬ</button>
+                            <button class="select-btn" data-cust="mixed">СМЕШАННЫЙ</button>
+                        </div>
+                    </div>
+
+                    <div class="control-group" id="tiedye-options-group" style="display: none;">
+                        <label>Способ окрашивания (в разработке)</label>
+                        <div class="custom-select-buttons">
+                            <button class="select-btn" data-pattern="spots">ПЯТНА</button>
+                            <button class="select-btn" data-pattern="spiral">СПИРАЛЬ</button>
+                            <button class="select-btn" data-pattern="stripes">ПОЛОСКИ</button>
+                        </div>
+                    </div>
+
+                    <div class="control-group">
+                        <label>Цвет изделия</label>
+                        <div class="picker-input">
+                            <input type="text" id="hex-input" value="#ffffff">
+                            <button id="apply-color" class="btn-inline">ПРИМЕНИТЬ</button>
+                        </div>
+                        
+                        <div class="color-palette">
+                            <div class="color-dot active" style="background: #ffffff;" data-color="#ffffff"></div>
+                            <div class="color-dot" style="background: #000000;" data-color="#000000"></div>
+                            <div class="color-dot" style="background: #2D3E71;" data-color="#2D3E71"></div>
+                            <div class="color-dot" style="background: #7B3E19;" data-color="#7B3E19"></div>
+                            <div class="color-dot" style="background: #252440;" data-color="#252440"></div>
+                            <div class="color-dot" style="background: #0E5A1E;" data-color="#0E5A1E"></div>
+                            <div class="color-dot" style="background: #CCCCCC;" data-color="#CCCCCC"></div>
+                            <div class="color-dot" style="background: #7FBFFF;" data-color="#7FBFFF"></div>
+                            <div class="color-dot" style="background: #E6007E;" data-color="#E6007E"></div>
+                            <div class="color-dot" style="background: #A61911;" data-color="#A61911"></div>
+                            <div class="color-dot" style="background: #FF7F7F;" data-color="#FF7F7F"></div>
+                            <div class="color-dot" style="background: #FFD700;" data-color="#FFD700"></div>
+                            <div class="color-dot" style="background: #7FFFBF;" data-color="#7FFFBF"></div>
+                        </div>
+                    </div>
+
+                    <div class="size-group">
+                        <div class="size-header">
+                            <span>Размер: <b id="current-size">не выбран</b></span>
+                            <a href="#" class="size-link">Таблица размеров</a>
+                        </div>
+                        <div class="size-grid">
+                            <button class="size-btn">XXS (40-42)</button>
+                            <button class="size-btn">XS (44-46)</button>
+                            <button class="size-btn">S (48)</button>
+                            <button class="size-btn">M (50)</button>
+                            <button class="size-btn">L (52)</button>
+                            <button class="size-btn">XL (54)</button>
+                            <button class="size-btn">XXL (56-58)</button>
+                            <button class="size-btn">3XL (60-62)</button>
+                            <button class="size-btn">4XL (64-66)</button>
+                            <button class="size-btn">5XL (68-70)</button>
+                            <button class="size-btn">6XL (72-74)</button>
+                            <button class="size-btn">7XL (76-78)</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="panel-content" id="tab-object" style="display: none;">
+                    <h3>ДОБАВИТЬ ПРИНТ</h3>
+                    <div class="upload-area">
+                        <p class="upload-desc">Загрузите файл png/jpg для интерактивного размещения на макете</p>
+                        <div class="file-upload-wrapper">
+                            <label for="upload-print" class="custom-file-upload">ВЫБРАТЬ ФАЙЛ</label>
+                            <input type="file" id="upload-print" accept="image/*">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script src="https://cdn.jsdelivr.net/npm/interactjs/dist/interact.min.js"></script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const productImg = document.getElementById('product-img');
+    const colorOverlay = document.getElementById('color-overlay');
+    const tieDyeOverlay = document.getElementById('tie-dye-overlay');
+    const hexInput = document.getElementById('hex-input');
+    const applyColorBtn = document.getElementById('apply-color'); // Кнопка "ПРИМЕНИТЬ"
+    const currentSizeLabel = document.getElementById('current-size');
+    const productName = document.getElementById('product-name');
+    const printContainer = document.getElementById('print-container');
+    const printLayer = document.getElementById('print-layer');
+    const removePrintBtn = document.getElementById('remove-print-btn');
+    const tieDyeGroup = document.getElementById('tiedye-options-group');
+
+    // Пути к текстурам окрашивания
+    const textures = {
+        spots: "{% static 'img/patterns/spots.png' %}",
+        spiral: "{% static 'img/patterns/spiral.png' %}",
+        stripes: "{% static 'img/patterns/stripes.png' %}"
+    };
+
+    function updateProductDisplay(type, side) {
+        const newSrc = `/static/img/${type}_${side}.png`;
+        productImg.src = newSrc;
+        
+        // Передаем правильный URL в маску
+        const maskUrl = `url(${newSrc})`;
+        
+        colorOverlay.style.webkitMaskImage = maskUrl;
+        colorOverlay.style.maskImage = maskUrl;
+
+        tieDyeOverlay.style.webkitMaskImage = maskUrl;
+        tieDyeOverlay.style.maskImage = maskUrl;
+        
+        document.querySelector('.mini-preview[data-side="front"] img').src = `/static/img/${type}_front.png`;
+        document.querySelector('.mini-preview[data-side="back"] img').src = `/static/img/${type}_back.png`;
+    }
+
+    // Вкладки типов одежды
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            if(this.innerText.includes("БУДЕТ ПОЗЖЕ")) return;
+            document.querySelector('.tab-btn.active').classList.remove('active');
+            this.classList.add('active');
+            
+            const type = this.dataset.type;
+            productName.innerText = this.innerText;
+            
+            document.querySelectorAll('.mini-preview').forEach(t => t.classList.remove('active'));
+            document.querySelector('.mini-preview[data-side="front"]').classList.add('active');
+            
+            updateProductDisplay(type, 'front');
+        });
+        
+        updateProductDisplay('tshirt', 'front');
+    });
+
+    // Переключение сторон
+    document.querySelectorAll('.mini-preview').forEach(thumb => {
+        thumb.addEventListener('click', function() {
+            document.querySelectorAll('.mini-preview').forEach(t => t.classList.remove('active'));
+            this.classList.add('active');
+            
+            const side = this.dataset.side;
+            const type = document.querySelector('.tab-btn.active').dataset.type;
+            
+            updateProductDisplay(type, side);
+        });
+    });
+
+    // ЛОГИКА: Тай-дай опции теперь открываются и для Тай-дай, и для Смешанного
+    document.querySelectorAll('[data-cust]').forEach(btn => {
+        btn.addEventListener('click', function() {
+            this.parentNode.querySelector('.select-btn.active')?.classList.remove('active');
+            this.classList.add('active');
+
+            const mode = this.dataset.cust;
+            if (mode === 'tiedye' || mode === 'mixed') {
+                tieDyeGroup.style.display = 'block';
+                tieDyeOverlay.style.display = 'block';
+            } else {
+                tieDyeGroup.style.display = 'none';
+                tieDyeOverlay.style.display = 'none';
+                tieDyeOverlay.style.backgroundImage = 'none';
+                document.querySelectorAll('[data-pattern]').forEach(b => b.classList.remove('active'));
+            }
+        });
+    });
+
+    // Выбор текстуры тай-дай
+    document.querySelectorAll('[data-pattern]').forEach(btn => {
+        btn.addEventListener('click', function() {
+            this.parentNode.querySelector('.select-btn.active')?.classList.remove('active');
+            this.classList.add('active');
+            const pattern = this.dataset.pattern;
+            tieDyeOverlay.style.backgroundImage = `url(${textures[pattern]})`;
+        });
+    });
+
+    // Табы управления (Продукт / Объект)
+    document.querySelectorAll('.p-tab').forEach(tab => {
+        tab.addEventListener('click', function() {
+            document.querySelectorAll('.p-tab').forEach(t => t.classList.remove('active'));
+            this.classList.add('active');
+            
+            const target = this.dataset.tab;
+            document.getElementById('tab-product').style.display = target === 'product' ? 'block' : 'none';
+            document.getElementById('tab-object').style.display = target === 'object' ? 'block' : 'none';
+        });
+    });
+
+    // Основная функция применения цвета
+    function applyNewColor(color) {
+        if(!color) return;
+        hexInput.value = color; // Синхронизируем инпут
+        colorOverlay.style.backgroundColor = color; // Накладываем цвет
+    }
+
+    // Обработка клика по палитре
+    document.querySelectorAll('.color-dot').forEach(dot => {
+        dot.addEventListener('click', function() {
+            const color = this.dataset.color;
+            applyNewColor(color);
+            document.querySelector('.color-dot.active').classList.remove('active');
+            this.classList.add('active');
+        });
+    });
+
+    // ИСПРАВЛЕНИЕ: Прямой обработчик для кнопки "ПРИМЕНИТЬ"
+    applyColorBtn.addEventListener('click', function(e) {
+        e.preventDefault(); // На всякий случай
+        const customColor = hexInput.value;
+        applyNewColor(customColor); // Применяем цвет из инпута
+        
+        // Снимаем "активность" с точек палитры
+        document.querySelector('.color-dot.active')?.classList.remove('active');
+    });
+
+    // Загрузка принта
+    document.getElementById('upload-print').addEventListener('change', function(e) {
+        if (e.target.files && e.target.files[0]) {
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                printLayer.src = event.target.result;
+                printContainer.style.display = 'block';
+                
+                // Центрируем принт при первичной загрузке
+                printContainer.style.transform = 'translate(0px, 0px)';
+                printContainer.setAttribute('data-x', 0);
+                printContainer.setAttribute('data-y', 0);
+                printContainer.style.width = '150px';
+                printContainer.style.height = '150px';
+            };
+            reader.readAsDataURL(e.target.files[0]);
+        }
+    });
+
+    // УДАЛЕНИЕ ПРИНТА
+    removePrintBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation(); // Предотвращаем срабатывание кликов по контейнеру
+        printLayer.src = '';
+        printContainer.style.display = 'none';
+        document.getElementById('upload-print').value = ''; // Сбрасываем значение инпута файла
+    });
+    
+    // Выбор размера
+    document.querySelectorAll('.size-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            document.querySelector('.size-btn.active')?.classList.remove('active');
+            this.classList.add('active');
+            currentSizeLabel.innerText = this.innerText;
+        });
+    });
+
+    interact('.draggable-resizable')
+        .resizable({
+            edges: { 
+                left:   '.resize-handle.bottom-left, .resize-handle.top-left', 
+                right:  '.resize-handle.bottom-right, .resize-handle.top-right', 
+                bottom: '.resize-handle.bottom-left, .resize-handle.bottom-right', 
+                top:    '.resize-handle.top-left, .resize-handle.top-right' 
+            },
+            listeners: {
+                move(event) {
+                    var target = event.target;
+                    var x = (parseFloat(target.getAttribute('data-x')) || 0);
+                    var y = (parseFloat(target.getAttribute('data-y')) || 0);
+
+                    target.style.width = event.rect.width + 'px';
+                    target.style.height = event.rect.height + 'px';
+
+                    x += event.deltaRect.left;
+                    y += event.deltaRect.top;
+
+                    target.style.transform = 'translate(' + x + 'px, ' + y + 'px)';
+                    target.setAttribute('data-x', x);
+                    target.setAttribute('data-y', y);
+                }
+            },
+            modifiers: [
+                interact.modifiers.restrictSize({
+                    min: { width: 40, height: 40 },
+                    max: { width: 280, height: 280 }
+                })
+            ]
+        })
+        .draggable({
+            listeners: {
+                move(event) {
+                    var target = event.target;
+                    var x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx;
+                    var y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy;
+
+                    target.style.transform = 'translate(' + x + 'px, ' + y + 'px)';
+                    target.setAttribute('data-x', x);
+                    target.setAttribute('data-y', y);
+                }
+            },
+            modifiers: [
+                interact.modifiers.restrictRect({
+                    // ИСПРАВЛЕНО: Теперь принт заперт строго в границах футболки
+                    restriction: '.product-wrapper', 
+                    endOnly: false
+                })
+            ]
+        });
+});
+
+// Сохранение концепта в PNG
+document.getElementById('save-btn').addEventListener('click', function() {
+    const container = document.querySelector('.main-image-container');
+    const options = { backgroundColor: null, useCORS: true, scale: 2 };
+    
+    html2canvas(container, options).then(canvas => {
+        const link = document.createElement('a');
+        link.download = `constructor-design-${new Date().getTime()}.png`;
+        link.href = canvas.toDataURL("image/png");
+        link.click();
+    }).catch(err => {
+        console.error("Ошибка сохранения:", err);
+    });
+});
+</script>
+{% endblock %}

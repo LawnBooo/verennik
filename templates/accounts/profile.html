@@ -1,0 +1,307 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Личный кабинет | VERENNIK{% endblock %}
+
+{% block content %}
+<div class="profile-section">
+    <div class="container profile-container">
+        <h1 class="profile-title">Личный кабинет</h1>
+        
+        <div class="profile-grid">
+            <div class="profile-sidebar">
+                <div class="profile-avatar">
+                    {% if user.profile.avatar %}
+                        <img src="{{ user.profile.avatar.url }}" alt="{{ user.username }}">
+                    {% else %}
+                        <div class="profile-avatar-placeholder">
+                            {{ user.username|first|upper }}
+                        </div>
+                    {% endif %}
+                </div>
+                
+                <h3>{{ user.username }}</h3>
+                <div class="profile-sidebar-email">{{ user.email }}</div>
+                
+                <div class="profile-stats">
+                    <div class="profile-stat">
+                        <span class="stat-value">{{ user.date_joined|date:"d.m.Y" }}</span>
+                        <span class="stat-label">Дата регистрации</span>
+                    </div>
+                </div>
+                
+                <button class="profile-logout-btn" onclick="logoutUser(event)">Выйти</button>
+            </div>
+            
+            <div class="profile-content">
+                <div class="profile-content-header">
+                    <h2 class="profile-info-title">Личная информация</h2>
+                </div>
+                
+                <div id="profileViewMode">
+                    <div class="profile-info-item">
+                        <div class="profile-info-label">ИМЯ</div>
+                        <div class="profile-info-value" id="viewUsername">{{ user.username }}</div>
+                    </div>
+                    <div class="profile-info-item">
+                        <div class="profile-info-label">Email</div>
+                        <div class="profile-info-value" id="viewEmail">{{ user.email }}</div>
+                    </div>
+                    <div class="profile-info-item">
+                        <div class="profile-info-label">ТЕЛЕФОН</div>
+                        <div class="profile-info-value" id="viewPhone">
+                            {% if user.profile.phone %}
+                                {{ user.profile.phone }}
+                            {% else %}
+                                <span class="not-specified">Не указан</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <div class="profile-actions">
+                        <button class="profile-edit-btn" onclick="showEditMode()">Редактировать</button>
+                    </div>
+                </div>
+                
+                <div id="profileEditMode" style="display: none;">
+                    <form id="profileEditForm" class="profile-edit-form">
+                        {% csrf_token %}
+                        <div class="edit-form-group">
+                            <label>Имя пользователя</label>
+                            <input type="text" id="editUsername" name="username" value="{{ user.username }}">
+                        </div>
+                        <div class="edit-form-group">
+                            <label>Email</label>
+                            <input type="email" id="editEmail" name="email" value="{{ user.email }}">
+                        </div>
+                        <div class="edit-form-group">
+                            <label>Телефон</label>
+                            <input type="tel" id="editPhone" name="phone" value="{% if user.profile.phone %}{{ user.profile.phone }}{% endif %}" placeholder="+7 (___) ___-__-__">
+                        </div>
+                        <div class="edit-form-group">
+                            <label>Новый пароль (оставьте пустым, если не хотите менять)</label>
+                            <input type="password" id="editPassword" name="password" placeholder="Новый пароль">
+                        </div>
+                        <div class="edit-form-group">
+                            <label>Подтверждение пароля</label>
+                            <input type="password" id="editPasswordConfirm" name="password_confirm" placeholder="Подтвердите пароль">
+                        </div>
+                        
+                        <div class="edit-form-actions">
+                            <button type="button" class="edit-save-btn" onclick="saveProfile()">Сохранить</button>
+                            <button type="button" class="edit-cancel-btn" onclick="cancelEdit()">Отмена</button>
+                        </div>
+                    </form>
+                </div>
+                
+                <div class="avatar-section">
+                    <h3 class="avatar-section-title">Аватар</h3>
+                    <form id="avatarForm" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="avatar-upload">
+                            <label for="avatarInput" class="avatar-upload-label">
+                                ИЗМЕНИТЬ
+                            </label>
+                            <input type="file" id="avatarInput" name="avatar" accept="image/*" style="display: none;">
+                        </div>
+                        <div id="avatarPreview" class="avatar-preview" style="display: none;">
+                            <img id="avatarPreviewImg" src="">
+                            <button type="button" class="avatar-cancel-btn" onclick="cancelAvatar()">Отмена</button>
+                            <button type="button" class="avatar-save-btn" onclick="saveAvatar()">Сохранить</button>
+                        </div>
+                    </form>
+                    <div id="avatarMessage" class="avatar-message"></div>
+                </div>
+            </div>
+        </div>
+        
+     <div class="user-orders-section profile-orders">
+    <h2 class="profile-orders-title">Мои заказы</h2>
+    <div class="orders-list">
+        {% for order in orders %}
+            <div class="order-card">
+                <!-- Шапка карточки: Номер, дата и статус на одной линии -->
+                <div class="order-header">
+                    <span class="order-number">Заказ №{{ order.id }}</span>
+                    <span class="order-date">{{ order.created_at|date:"d.m.Y" }}</span>
+                </div>
+                
+                <!-- Содержимое карточки -->
+                <div class="order-body" style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 15px;">
+                    <p style="margin: 0; color: var(--text-dark);">
+                        <strong style="color: var(--accent-pink); font-family: 'Involve-O', sans-serif; font-size: 14px; text-transform: uppercase; display: inline-block; width: 120px;">Тип:</strong> 
+                        {{ order.get_order_type_display }}
+                    </p>
+                    <p style="margin: 0; color: var(--text-dark); display: flex; align-items: center;">
+                        <strong style="color: var(--accent-pink); font-family: 'Involve-O', sans-serif; font-size: 14px; text-transform: uppercase; display: inline-block; width: 120px;">Статус:</strong> 
+                        <!-- Подставляем динамический статус из поля модели, например status-pending -->
+                        <span class="order-status status-{{ order.status }}">{{ order.get_status_display }}</span>
+                    </p>
+                    <div style="margin-top: 5px; color: var(--text-dark); line-height: 1.4;">
+                        <strong style="color: var(--accent-pink); font-family: 'Involve-O', sans-serif; font-size: 14px; text-transform: uppercase; display: block; margin-bottom: 5px;">Содержимое:</strong> 
+                        <div class="order-description" style="padding-left: 10px; border-left: 2px solid rgba(13, 24, 69, 0.1);">
+                            {{ order.description|linebreaksbr }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% empty %}
+            <p class="empty-orders">У вас пока нет оформленных заказов.</p>
+        {% endfor %}
+    </div>
+</div>
+    
+    </div>
+</div>
+
+<script>
+function showEditMode() {
+    document.getElementById('profileViewMode').style.display = 'none';
+    document.getElementById('profileEditMode').style.display = 'block';
+}
+
+function cancelEdit() {
+    document.getElementById('profileViewMode').style.display = 'block';
+    document.getElementById('profileEditMode').style.display = 'none';
+    
+    // Сброс значений формы редактирования
+    document.getElementById('editUsername').value = '{{ user.username }}';
+    document.getElementById('editEmail').value = '{{ user.email }}';
+    document.getElementById('editPhone').value = '{% if user.profile.phone %}{{ user.profile.phone }}{% endif %}';
+    document.getElementById('editPassword').value = '';
+    document.getElementById('editPasswordConfirm').value = '';
+}
+
+function showSuccessMessage(message) {
+    const msgDiv = document.createElement('div');
+    msgDiv.className = 'success-message';
+    msgDiv.textContent = message;
+    document.body.appendChild(msgDiv);
+    
+    setTimeout(() => {
+        msgDiv.remove();
+    }, 3000);
+}
+
+function saveProfile() {
+    const username = document.getElementById('editUsername').value;
+    const email = document.getElementById('editEmail').value;
+    const phone = document.getElementById('editPhone').value;
+    const password = document.getElementById('editPassword').value;
+    const passwordConfirm = document.getElementById('editPasswordConfirm').value;
+    
+    if (password && password !== passwordConfirm) {
+        alert('Пароли не совпадают');
+        return;
+    }
+    
+    fetch('{% url "update_profile" %}', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': getCookie('csrftoken')
+        },
+        body: JSON.stringify({
+            username: username,
+            email: email,
+            phone: phone,
+            password: password
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === 'success') {
+            // Обновляем отображаемые данные
+            document.getElementById('viewUsername').textContent = username;
+            document.getElementById('viewEmail').textContent = email;
+            const phoneSpan = document.getElementById('viewPhone');
+            if (phone) {
+                phoneSpan.textContent = phone;
+                phoneSpan.classList.remove('not-specified');
+            } else {
+                phoneSpan.innerHTML = '<span class="not-specified">Не указан</span>';
+            }
+            
+            showSuccessMessage('Данные успешно обновлены!');
+            cancelEdit();
+        } else {
+            alert(data.message);
+        }
+    })
+    .catch(error => {
+        alert('Ошибка при сохранении данных');
+    });
+}
+
+// Аватар
+let selectedAvatarFile = null;
+
+document.getElementById('avatarInput').addEventListener('change', function(e) {
+    const file = e.target.files[0];
+    if (file) {
+        selectedAvatarFile = file;
+        const reader = new FileReader();
+        reader.onload = function(event) {
+            document.getElementById('avatarPreviewImg').src = event.target.result;
+            document.getElementById('avatarPreview').style.display = 'flex';
+        };
+        reader.readAsDataURL(file);
+    }
+});
+
+function cancelAvatar() {
+    selectedAvatarFile = null;
+    document.getElementById('avatarInput').value = '';
+    document.getElementById('avatarPreview').style.display = 'none';
+    document.getElementById('avatarMessage').innerHTML = '';
+}
+
+function saveAvatar() {
+    if (!selectedAvatarFile) return;
+    
+    const formData = new FormData();
+    formData.append('avatar', selectedAvatarFile);
+    formData.append('csrfmiddlewaretoken', getCookie('csrftoken'));
+    
+    fetch('{% url "update_avatar" %}', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === 'success') {
+            // Обновляем аватар на странице
+            const avatarContainer = document.querySelector('.profile-avatar');
+            if (data.avatar_url) {
+                avatarContainer.innerHTML = `<img src="${data.avatar_url}?t=${Date.now()}" alt="{{ user.username }}">`;
+            }
+            showSuccessMessage('Аватар успешно обновлен!');
+            cancelAvatar();
+        } else {
+            document.getElementById('avatarMessage').innerHTML = `<span style="color: var(--accent-pink);">${data.message}</span>`;
+            setTimeout(() => {
+                document.getElementById('avatarMessage').innerHTML = '';
+            }, 3000);
+        }
+    })
+    .catch(error => {
+        document.getElementById('avatarMessage').innerHTML = '<span style="color: var(--accent-pink);">Ошибка при загрузке аватара</span>';
+    });
+}
+
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+</script>
+{% endblock %}

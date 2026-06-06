@@ -1,0 +1,796 @@
+@font-face {
+    font-family: "Involve";
+    src: url("../fonts/Involve-Medium.ttf") format("truetype");
+    font-weight: 500;
+    font-style: normal;
+}
+@font-face {
+    font-family: "Involve-O";
+    src: url("../fonts/Involve-MediumOblique.ttf") format("truetype");
+    font-weight: 500;
+    font-style: normal;
+}
+
+:root {
+    /* Цвета из вашего проекта */
+    --brand-bg: #FFF6F3;
+    --brand-dark: #0D1845;
+    --brand-pink: #FF5983;
+    --brand-blue: #5779FF;
+    --brand-yellow: #FFBD30;
+
+    /* Переменные Django Admin */
+    --primary: var(--brand-dark);
+    --secondary: var(--brand-dark);
+    --accent: var(--brand-pink);
+    --primary-back: var(--brand-bg);
+
+    --body-bg: var(--brand-bg);
+    --body-fg: var(--brand-dark);
+    --body-quiet-color: rgba(13, 24, 73, 0.6);
+
+    --breadcrumbs-bg: #ffffff;
+    --breadcrumbs-link-fg: var(--brand-dark);
+
+    --header-bg: var(--brand-dark);
+    --header-color: var(--brand-bg);
+    --header-link-color: var(--brand-bg);
+
+    --object-tools-bg: transparent;
+    --object-tools-hover-bg: var(--brand-dark);
+
+    /* Скругления в стиле макета */
+    --border-radius-main: 10px;
+}
+
+/* --- Общие стили интерфейса --- */
+body {
+    font-family: 'Involve', sans-serif !important;
+    background: var(--brand-bg) !important;
+    color: var(--brand-dark) !important;
+}
+
+a:link, a:visited {
+    color: var(--brand-blue);
+}
+a:hover {
+    color: var(--brand-pink);
+}
+
+/* Шапка панели */
+#header {
+    background: #ffffff !important;
+    border-bottom: 2px solid var(--brand-dark);
+    padding: 15px 40px;
+}
+#header a, #branding h1 a {
+    color: var(--brand-dark) !important;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+#user-tools {
+    color: var(--brand-dark) !important;
+}
+#user-tools a {
+    color: var(--brand-dark) !important;
+    border-bottom: 1px dashed var(--brand-dark);
+}
+
+/* Хлебные крошки */
+.breadcrumbs {
+    background: transparent !important;
+    padding: 15px 40px !important;
+    font-family: 'Involve-O', sans-serif;
+    color: var(--brand-pink) !important;
+    border-bottom: 1px solid rgba(13, 24, 73, 0.1);
+}
+.breadcrumbs a {
+    color: var(--brand-dark) !important;
+}
+
+/* --- Уходим от скучных таблиц: Блоки модулей (Dashboard) --- */
+.dashboard #content-main {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 25px;
+    padding: 20px 0;
+}
+
+.app-inline_container, .module {
+    background: #ffffff !important;
+    border: 2px solid var(--brand-dark) !important;
+    border-radius: 14px !important;
+    box-shadow: none !important;
+    margin-bottom: 25px !important;
+    overflow: hidden;
+}
+
+.module caption, .module h2 {
+    background: transparent !important;
+    color: var(--brand-pink) !important;
+    font-family: 'Involve-O', sans-serif !important;
+    font-size: 20px !important;
+    padding: 15px 20px !important;
+    border-bottom: 2px solid var(--brand-dark) !important;
+    text-transform: uppercase;
+}
+
+/* Избавляемся от жестких внутренних табличных границ */
+table {
+    border-collapse: collapse !important;
+}
+th, td {
+    border-bottom: 1px dashed rgba(13, 24, 73, 0.15) !important;
+    padding: 12px 15px !important;
+    color: var(--brand-dark) !important;
+}
+thead th {
+    background: rgba(13, 24, 73, 0.03) !important;
+    border-bottom: 2px solid var(--brand-dark) !important;
+    text-transform: uppercase;
+    font-size: 13px;
+    color: var(--brand-dark) !important;
+}
+tr.row1 { background: #ffffff !important; }
+tr.row2 { background: rgba(255, 246, 243, 0.4) !important; }
+
+input[type="text"], input[type="password"], input[type="email"], select, textarea {
+    background: #ffffff !important;
+    border: 2px solid var(--brand-dark) !important;
+    border-radius: 10px !important;
+    padding: 10px 14px !important;
+    color: var(--brand-dark) !important;
+    box-sizing: border-box;
+}
+
+/* Кнопки в стиле конструктора сайтов (Outline -> Solid на hover) */
+input[type="submit"], .button, .object-tools a {
+    background: transparent !important;
+    border: 2px solid var(--brand-dark) !important;
+    border-radius: 10px !important;
+    padding: 10px 25px !important;
+    color: var(--brand-dark) !important;
+    font-weight: bold !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.5px;
+    transition: 0.2s ease !important;
+    box-shadow: none !important;
+}
+
+input[type="submit"]:hover, .button:hover, .object-tools a:hover {
+    background: var(--brand-dark) !important;
+    color: var(--brand-bg) !important;
+}
+
+/* Розовый акцент для кнопок сохранения дефолтных действий (Save) */
+input[type="submit"].default {
+    border-color: var(--brand-pink) !important;
+    color: var(--brand-pink) !important;
+}
+input[type="submit"].default:hover {
+    background: var(--brand-pink) !important;
+    color: #ffffff !important;
+}
+
+/* Блок фильтрации справа (сделаем его карточкой) */
+#changelist-filter {
+    background: #ffffff !important;
+    border-left: 2px solid var(--brand-dark) !important;
+    border-top: none;
+    border-bottom: none;
+}
+#changelist-filter h2 {
+    background: var(--brand-dark) !important;
+    color: #ffffff !important;
+}
+
+/* Фон страницы авторизации */
+.admin-login-page,
+body.login,
+#login-body {
+    background: var(--bg-main) !important;
+    font-family: 'Involve', sans-serif !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    margin: 0;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+/* Контейнер формы (Повторяет .modal-content сайта) */
+.admin-login-container,
+#login,
+.login-form-wrapper {
+    background-color: #ffffff !important;
+    padding: 40px !important;
+    width: 100% !important;
+    max-width: 450px !important;
+    border: 2px solid var(--text-dark) !important;
+    border-radius: 10px !important;
+    box-shadow: 0 15px 35px rgba(13, 24, 73, 0.05) !important;
+    position: relative;
+    box-sizing: border-box;
+}
+
+/* Заголовки в форме авторизации */
+.admin-login-container h1,
+.admin-login-container h2,
+#login h1 a {
+    font-size: 28px !important;
+    text-transform: uppercase !important;
+    color: var(--text-dark) !important;
+    letter-spacing: 1px !important;
+    margin-bottom: 30px !important;
+    text-align: center !important;
+    font-family: 'Involve', sans-serif !important;
+    font-weight: bold !important;
+}
+
+/* Группы полей (как .form-group на сайте) */
+.admin-form-group,
+#loginform p,
+.login-form-field {
+    color: var(--accent-pink) !important;
+    font-family: 'Involve-O', sans-serif !important;
+    margin-bottom: 20px !important;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+/* Метки полей (как label на сайте) */
+.admin-form-group label,
+#loginform label {
+    font-size: 14px !important;
+    color: var(--accent-pink) !important;
+}
+
+/* Инпуты (Повторяют .order-form .form-group input на сайте) */
+.admin-form-group input[type="text"],
+.admin-form-group input[type="password"],
+.admin-form-group input[type="email"],
+#loginform input[type="text"],
+#loginform input[type="password"] {
+    background-color: white !important;
+    width: 100% !important;
+    padding: 12px 15px !important;
+    border: 2px solid var(--text-dark) !important; /* Делаем 2px, чтобы соответствовать остальным кнопкам */
+    border-radius: 10px !important;
+    font-size: 15px !important;
+    color: var(--text-dark) !important;
+    font-family: 'Involve', sans-serif !important;
+    box-sizing: border-box !important;
+    transition: border-color 0.2s ease;
+}
+
+/* Фокус инпутов */
+.admin-form-group input:focus,
+#loginform input:focus {
+    outline: none !important;
+    border-color: var(--accent-blue) !important;
+}
+
+/* Кнопка отправки формы (Повторяет .order-btn с ховером сайта) */
+.admin-submit-btn,
+#loginform input[type="submit"],
+.login .button-primary {
+    background-color: white !important;
+    width: 100% !important;
+    padding: 14px 40px !important;
+    border: 2px solid var(--text-dark) !important;
+    border-radius: 10px !important;
+    color: var(--text-dark) !important;
+    cursor: pointer !important;
+    font-size: 16px !important;
+    font-weight: bold !important;
+    text-transform: uppercase !important;
+    letter-spacing: 1px !important;
+    display: block !important;
+    transition: 0.2s ease !important;
+    box-shadow: none !important;
+    height: auto !important;
+}
+
+.admin-submit-btn:hover,
+#loginform input[type="submit"]:hover,
+.login .button-primary:hover {
+    border-color: var(--accent-blue) !important;
+    color: var(--accent-blue) !important;
+    background: white !important;
+}
+
+
+/* 2. СТРУКТУРНАЯ СТИЛИЗАЦИЯ ПАНЕЛИ АДМИНИСТРАТОРА (Самостоятельный дизайн)
+   Убираем "поломанность", делаем чистый аккуратный UI на базе ваших переменных */
+
+.admin-dashboard {
+    background: var(--bg-main);
+    font-family: 'Involve', sans-serif;
+    color: var(--text-dark);
+    display: grid;
+    grid-template-columns: 280px 1fr; /* Четкое разделение на сайдбар и контент */
+    min-height: 100vh;
+}
+
+/* Сайдбар админки */
+.admin-sidebar {
+    background-color: white;
+    border-right: 2px solid var(--text-dark);
+    padding: 30px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+.admin-logo {
+    font-size: 22px;
+    font-weight: bold;
+    text-transform: uppercase;
+    color: var(--text-dark);
+    border-bottom: 2px solid var(--text-dark);
+    padding-bottom: 15px;
+}
+
+/* Навигация в сайдбаре */
+.admin-menu {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    list-style: none;
+}
+
+.admin-menu-item a {
+    display: block;
+    padding: 12px 20px;
+    text-decoration: none;
+    color: var(--text-dark);
+    font-size: 16px;
+    text-transform: uppercase;
+    font-weight: 600;
+    border-radius: 8px;
+    border: 2px solid transparent;
+    transition: 0.2s ease;
+}
+
+.admin-menu-item a:hover,
+.admin-menu-item.active a {
+    border-color: var(--text-dark);
+    background-color: var(--bg-main);
+}
+
+.admin-menu-item.logout a {
+    color: var(--accent-pink);
+    margin-top: auto;
+}
+.admin-menu-item.logout a:hover {
+    background-color: var(--accent-pink);
+    color: white;
+    border-color: var(--accent-pink);
+}
+
+/* Главная контентная зона админки */
+.admin-main-content {
+    padding: 40px;
+    overflow-y: auto;
+}
+
+/* Шапка контентной зоны */
+.admin-content-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid var(--text-dark);
+    padding-bottom: 20px;
+    margin-bottom: 30px;
+}
+
+.admin-page-title {
+    font-size: 36px;
+    text-transform: uppercase;
+    color: var(--text-dark);
+}
+
+/* Карточки метрик/статистики (в стиле .service-card сайта) */
+.admin-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 25px;
+    margin-bottom: 40px;
+}
+
+.admin-stat-card {
+    background: white;
+    border: 2px solid var(--text-dark);
+    border-radius: 10px;
+    padding: 25px;
+    text-align: center;
+}
+
+.admin-stat-card .stat-value {
+    font-size: 32px;
+    font-weight: bold;
+    color: var(--accent-blue);
+    margin-bottom: 5px;
+}
+
+.admin-stat-card .stat-label {
+    font-size: 14px;
+    text-transform: uppercase;
+    color: var(--text-dark);
+    opacity: 0.8;
+}
+
+/* Таблицы данных в админке */
+.admin-table-wrapper {
+    background: white;
+    border: 2px solid var(--text-dark);
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.admin-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+}
+
+.admin-table th {
+    background-color: var(--text-dark);
+    color: var(--bg-main);
+    padding: 15px 20px;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 14px;
+}
+
+.admin-table td {
+    padding: 15px 20px;
+    border-bottom: 1px solid rgba(13, 24, 73, 0.1);
+    color: var(--text-dark);
+    font-size: 15px;
+}
+
+.admin-table tr:last-child td {
+    border-bottom: none;
+}
+
+.admin-table tr:hover td {
+    background-color: var(--bg-main);
+}
+
+/* Кнопки действий внутри админки */
+.admin-btn-action {
+    padding: 8px 16px;
+    font-size: 14px;
+    text-transform: uppercase;
+    font-weight: bold;
+    border-radius: 6px;
+    border: 2px solid var(--text-dark);
+    background: transparent;
+    color: var(--text-dark);
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+    transition: 0.2s;
+}
+
+.admin-btn-action:hover {
+    background: var(--text-dark);
+    color: var(--bg-main);
+}
+
+.admin-btn-delete {
+    border-color: var(--accent-pink);
+    color: var(--accent-pink);
+}
+
+.admin-btn-delete:hover {
+    background: var(--accent-pink);
+    color: white;
+    border-color: var(--accent-pink);
+}
+
+.admin-login-page,
+body.login,
+#login-body {
+    background: var(--bg-main) !important;
+    font-family: 'Involve', sans-serif !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    margin: 0;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+/* Контейнер формы (Повторяет .modal-content сайта) */
+.admin-login-container,
+#login,
+.login-form-wrapper {
+    background-color: #ffffff !important;
+    padding: 40px !important;
+    width: 100% !important;
+    max-width: 450px !important;
+    border: 2px solid var(--text-dark) !important;
+    border-radius: 10px !important;
+    box-shadow: 0 15px 35px rgba(13, 24, 73, 0.05) !important;
+    position: relative;
+    box-sizing: border-box;
+}
+
+/* Заголовки в форме авторизации */
+.admin-login-container h1,
+.admin-login-container h2,
+#login h1 a {
+    font-size: 28px !important;
+    text-transform: uppercase !important;
+    color: var(--text-dark) !important;
+    letter-spacing: 1px !important;
+    margin-bottom: 30px !important;
+    text-align: center !important;
+    font-family: 'Involve', sans-serif !important;
+    font-weight: bold !important;
+}
+
+/* Группы полей (как .form-group на сайте) */
+.admin-form-group,
+#loginform p,
+.login-form-field {
+    color: var(--accent-pink) !important;
+    font-family: 'Involve-O', sans-serif !important;
+    margin-bottom: 20px !important;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+/* Метки полей (как label на сайте) */
+.admin-form-group label,
+#loginform label {
+    font-size: 14px !important;
+    color: var(--accent-pink) !important;
+}
+
+/* Инпуты (Повторяют .order-form .form-group input на сайте) */
+.admin-form-group input[type="text"],
+.admin-form-group input[type="password"],
+.admin-form-group input[type="email"],
+#loginform input[type="text"],
+#loginform input[type="password"] {
+    background-color: white !important;
+    width: 100% !important;
+    padding: 12px 15px !important;
+    border: 2px solid var(--text-dark) !important; /* Делаем 2px, чтобы соответствовать остальным кнопкам */
+    border-radius: 10px !important;
+    font-size: 15px !important;
+    color: var(--text-dark) !important;
+    font-family: 'Involve', sans-serif !important;
+    box-sizing: border-box !important;
+    transition: border-color 0.2s ease;
+}
+
+/* Фокус инпутов */
+.admin-form-group input:focus,
+#loginform input:focus {
+    outline: none !important;
+    border-color: var(--accent-blue) !important;
+}
+
+/* Кнопка отправки формы (Повторяет .order-btn с ховером сайта) */
+.admin-submit-btn,
+#loginform input[type="submit"],
+.login .button-primary {
+    background-color: white !important;
+    width: 100% !important;
+    padding: 14px 40px !important;
+    border: 2px solid var(--text-dark) !important;
+    border-radius: 10px !important;
+    color: var(--text-dark) !important;
+    cursor: pointer !important;
+    font-size: 16px !important;
+    font-weight: bold !important;
+    text-transform: uppercase !important;
+    letter-spacing: 1px !important;
+    display: block !important;
+    transition: 0.2s ease !important;
+    box-shadow: none !important;
+    height: auto !important;
+}
+
+.admin-submit-btn:hover,
+#loginform input[type="submit"]:hover,
+.login .button-primary:hover {
+    border-color: var(--accent-blue) !important;
+    color: var(--accent-blue) !important;
+    background: white !important;
+}
+
+.admin-dashboard {
+    background: var(--bg-main);
+    font-family: 'Involve', sans-serif;
+    color: var(--text-dark);
+    display: grid;
+    grid-template-columns: 280px 1fr; /* Четкое разделение на сайдбар и контент */
+    min-height: 100vh;
+}
+
+/* Сайдбар админки */
+.admin-sidebar {
+    background-color: white;
+    border-right: 2px solid var(--text-dark);
+    padding: 30px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+.admin-logo {
+    font-size: 22px;
+    font-weight: bold;
+    text-transform: uppercase;
+    color: var(--text-dark);
+    border-bottom: 2px solid var(--text-dark);
+    padding-bottom: 15px;
+}
+
+/* Навигация в сайдбаре */
+.admin-menu {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    list-style: none;
+}
+
+.admin-menu-item a {
+    display: block;
+    padding: 12px 20px;
+    text-decoration: none;
+    color: var(--text-dark);
+    font-size: 16px;
+    text-transform: uppercase;
+    font-weight: 600;
+    border-radius: 8px;
+    border: 2px solid transparent;
+    transition: 0.2s ease;
+}
+
+.admin-menu-item a:hover,
+.admin-menu-item.active a {
+    border-color: var(--text-dark);
+    background-color: var(--bg-main);
+}
+
+.admin-menu-item.logout a {
+    color: var(--accent-pink);
+    margin-top: auto;
+}
+.admin-menu-item.logout a:hover {
+    background-color: var(--accent-pink);
+    color: white;
+    border-color: var(--accent-pink);
+}
+
+/* Главная контентная зона админки */
+.admin-main-content {
+    padding: 40px;
+    overflow-y: auto;
+}
+
+/* Шапка контентной зоны */
+.admin-content-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid var(--text-dark);
+    padding-bottom: 20px;
+    margin-bottom: 30px;
+}
+
+.admin-page-title {
+    font-size: 36px;
+    text-transform: uppercase;
+    color: var(--text-dark);
+}
+
+/* Карточки метрик/статистики (в стиле .service-card сайта) */
+.admin-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 25px;
+    margin-bottom: 40px;
+}
+
+.admin-stat-card {
+    background: white;
+    border: 2px solid var(--text-dark);
+    border-radius: 10px;
+    padding: 25px;
+    text-align: center;
+}
+
+.admin-stat-card .stat-value {
+    font-size: 32px;
+    font-weight: bold;
+    color: var(--accent-blue);
+    margin-bottom: 5px;
+}
+
+.admin-stat-card .stat-label {
+    font-size: 14px;
+    text-transform: uppercase;
+    color: var(--text-dark);
+    opacity: 0.8;
+}
+
+/* Таблицы данных в админке */
+.admin-table-wrapper {
+    background: white;
+    border: 2px solid var(--text-dark);
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.admin-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+}
+
+.admin-table th {
+    background-color: var(--text-dark);
+    color: var(--bg-main);
+    padding: 15px 20px;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 14px;
+}
+
+.admin-table td {
+    padding: 15px 20px;
+    border-bottom: 1px solid rgba(13, 24, 73, 0.1);
+    color: var(--text-dark);
+    font-size: 15px;
+}
+
+.admin-table tr:last-child td {
+    border-bottom: none;
+}
+
+.admin-table tr:hover td {
+    background-color: var(--bg-main);
+}
+
+/* Кнопки действий внутри админки */
+.admin-btn-action {
+    padding: 8px 16px;
+    font-size: 14px;
+    text-transform: uppercase;
+    font-weight: bold;
+    border-radius: 6px;
+    border: 2px solid var(--text-dark);
+    background: transparent;
+    color: var(--text-dark);
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+    transition: 0.2s;
+}
+
+.admin-btn-action:hover {
+    background: var(--text-dark);
+    color: var(--bg-main);
+}
+
+.admin-btn-delete {
+    border-color: var(--accent-pink);
+    color: var(--accent-pink);
+}
+
+.admin-btn-delete:hover {
+    background: var(--accent-pink);
+    color: white;
+    border-color: var(--accent-pink);
+}

@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}НОВАЯ ЖИЗНЬ{% endblock %}
+
+{% block content %}
+    
+    <section class="catalog-header">
+    <div class="container">
+        <h1 class="catalog-title">ДАЙ ВЕЩАМ ВТОРУЮ ЖИЗНЬ</h1>
+        <p class="catalog-subtitle">в этом разделе вы можете ознакомиться с одной из услуг мастерской-студии по обновлению старых вещей</p>
+    </div>
+</section>
+    
+    <section class="preview">
+    <div class="container preview-container preview-animate">
+    <div class="preview-item">
+        <img src="{% static 'img/VcBI2V13Yyov0XTo1GPzaootOXhtRNQwLMwEXXOg5H_GY0AA2SIAvnRui5SVm4I-Bnldfx58pKHLn0FAW70KJHVa 1.png' %}" alt="">
+    </div>
+    <div class="preview-item">
+        <img src="{% static 'img/photo_44_2026-02-06_13-06-40 2.png' %}" alt="">
+    </div>
+    <div class="preview-item">
+        <img src="{% static 'img/photo_6_2026-02-06_13-06-40 2.png' %}" alt="">
+    </div>
+    <div class="preview-item">
+        <img src="{% static 'img/photo_7_2026-02-06_13-06-40 1.png' %}" alt="">
+    </div>
+</div>
+
+<div class="preview-arrows animate-on-scroll">
+    <span>&#10095;&#10095;&#10095;</span>
+</div>
+        
+</section>
+    <div class="yellow-divider"></div>
+    
+    <section class="how-it-works-section">
+        <div class="container">
+            <div class="info-content-wrapper">
+                
+                <p class="intro-text">
+                    Не повод прощаться с вещью, если она уже не радует, вышла из моды, залежалась в шкафу <br>
+                    или просто надоела, но когда-то была идеальной. «ВТОРАЯ ЖИЗНЬ» — это не ремонт дырок.<br>
+                    Это кастомизация. Старая вещь превращается в новую. Уникальную. Вашу.
+                </p>
+
+                <div class="info-block">
+                    <h2>КАК ЭТО РАБОТАЕТ?</h2>
+                    <p>Вы приносите то, что перестали носить.<br>
+                       Вместе изучаем вещь: что в ней хорошо, что плохо, что не устраивает, а что можно улучшить.<br>
+                       Придумываем дизайн: окрашивание, рисунок, фурнитура...<br>
+                       Затем вы можете довериться нам, а можете воплотить свои идеи в реальность самостоятельно!</p>
+                </div>
+
+                <div class="info-block">
+                    <p class="list-title">Что можно сделать:</p>
+                    <ul class="custom-list">
+                        <li>Превратить одну вещь в другую.</li>
+                        <li>Сделать роспись или окрашивание в любой технике.</li>
+                        <li>Добавить вышивку, аппликацию, карманы, нашивки, ремни, заклёпки.</li>
+                        <li>Заменить скучные пуговицы на необычные.</li>
+                        <li>Перекрасить или добавить пятна, полосы, графику красками по ткани.</li>
+                        <li>Объединить две старые вещи в одну новую.</li>
+                    </ul>
+                </div>
+
+                <div class="important-question-block">
+                    <p>Для нас важен только один вопрос:</p>
+                    <p class="pink-script-question">можно ли с вещью что-то сделать так, чтобы вы захотели её носить завтра.</p>
+                </div>
+
+                <div class="info-block">
+                    <h2>КАК НАЧАТЬ?</h2>
+                    <p>Присылайте фото вещи на почту или в мессенджер. Пишите, что именно вам в ней <br>
+                        не нравится и что хочется получить. Будут обозначены сроки реализации, стоимость, возможности. Старая вещь становится новой. Не потому, что её починили,<br>
+                        а потому что её перепридумали.</p>
+                </div>
+
+            </div>
+        </div>
+    </section>
+    
+{% endblock %}

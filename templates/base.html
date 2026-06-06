@@ -1,0 +1,328 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}VERENNIK{% endblock %}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/svg+xml" href="{% static 'img/logo new4.svg' %}">
+    <link rel="stylesheet" href="{% static 'css/newstyle.css' %}">
+</head>
+
+<body>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+<header class="header">
+    <div class="container header-container">
+        
+        <div class="logo">
+            <a href="{% url 'index' %}">
+    <img src="{% static 'img/logo 1.png' %}" class="VERENNIK">
+                </a>
+        </div> 
+        
+    <nav class="nav">
+        <a href="{% url 'index' %}#philosophy">БРЕНД</a>
+            <a href="{% url 'about' %}">КАТАЛОГ</a>
+            <a href="{% url 'achievements' %}">ПОРТФОЛИО</a>
+            <a href="{% url 'constructor' %}">КОНСТРУКТОР</a>
+            <a href="{% url 'favorites' %}">ИЗБРАННОЕ</a>
+    </nav>
+        
+        <div class="nav-right">
+            <div class="user-menu">
+                {% if user.is_authenticated and not user.is_superuser %}
+                    <a href="{% url 'profile' %}" class="user-link">ЛИЧНЫЙ КАБИНЕТ</a>
+                    <a href="#" class="user-link logout-link" onclick="logoutUser(event)">ВЫЙТИ</a>
+                {% else %}
+                    <a href="#" class="user-link" onclick="openAuthModal(event)">ВОЙТИ / РЕГИСТРАЦИЯ</a>
+                {% endif %}
+            </div>
+        </div>
+    
+    </div>
+</header>
+
+<div id="authModal" class="auth-modal">
+    <div class="auth-modal-content">
+        <span class="auth-close" onclick="closeAuthModal()">&times;</span>
+        <div class="auth-tabs">
+            <button class="auth-tab active" onclick="switchAuthTab('login')">Вход</button>
+            <button class="auth-tab" onclick="switchAuthTab('register')">Регистрация</button>
+        </div>
+        
+        <div id="loginForm" class="auth-form">
+            <div class="auth-form-group">
+                <label>Имя пользователя</label>
+                <input type="text" id="loginUsername" placeholder="Введите имя пользователя">
+            </div>
+            <div class="auth-form-group">
+                <label>Пароль</label>
+                <input type="password" id="loginPassword" placeholder="Введите пароль">
+            </div>
+            <button class="auth-btn" onclick="loginUser()">Войти</button>
+        </div>
+        
+        <div id="registerForm" class="auth-form" style="display: none;">
+            <div class="auth-form-group">
+                <label>Имя пользователя</label>
+                <input type="text" id="regUsername" placeholder="Введите имя пользователя">
+            </div>
+            <div class="auth-form-group">
+                <label>Email</label>
+                <input type="email" id="regEmail" placeholder="Введите email">
+            </div>
+            <div class="auth-form-group">
+                <label>Телефон (опционально)</label>
+                <input type="text" id="regPhone" placeholder="Введите телефон">
+            </div>
+            <div class="auth-form-group">
+                <label>Пароль</label>
+                <input type="password" id="regPassword" placeholder="Введите пароль">
+            </div>
+            <div class="auth-form-group">
+                <label>Подтверждение пароля</label>
+                <input type="password" id="regPassword2" placeholder="Подтвердите пароль">
+            </div>
+            <button class="auth-btn" onclick="registerUser()">Зарегистрироваться</button>
+        </div>
+        
+        <div id="authMessage" class="auth-message"></div>
+    </div>
+</div>
+
+<main>
+    {% block content %}{% endblock %}
+</main>
+
+<footer class="footer">
+    <div class="container footer-container">
+        
+        <div class="footer-left">
+            <img src="{% static 'img/logo new2.png' %}" alt="VERENNIK">
+        </div>
+        
+        <div class="footer-center">
+            <div class="footer-nav">
+                <a href="{% url 'index' %}#philosophy">БРЕНД</a>
+                <a href="{% url 'about' %}">КАТАЛОГ</a>
+                <a href="{% url 'achievements' %}">ПОРТФОЛИО</a>
+            </div>
+            <div class="footer-nav">
+                <a href="{% url 'constructor' %}">КОНСТРУКТОР</a>
+                <a href="{% url 'new_life' %}">ВТОРАЯ ЖИЗНЬ</a>
+                <a href="{% url 'favorites' %}">ИЗБРАННОЕ</a>
+            </div>
+        </div>
+        
+        <div class="footer-right-block">
+            <div class="footer-socials">
+                <a href="#"><img src="{% static 'img/Vector tg.png' %}" alt="Telegram"></a>
+                <div class="footer-socials-vk">
+                <a href="https://vk.com/ksu_veren"><img src="{% static 'img/vk.png' %}" alt="VK"></a>
+                </div>
+                <div class="footer-socials-2gis">
+                <a href="#"><img src="{% static 'img/2gis 1.png' %}" alt="2GIS"></a>
+                </div>
+            </div>
+            <div class="footer-contacts">
+                <a href="tel:89145229464" class="footer-phone">8(914)–522–94–64</a>
+                <p class="footer-address">ул. Балябина, 41</p>
+            </div>
+        </div>
+        
+    </div>
+</footer>
+
+<script>
+    function openAuthModal(event) {
+    if (event) event.preventDefault();
+    document.getElementById('authModal').style.display = 'flex';
+}
+
+function closeAuthModal() {
+    document.getElementById('authModal').style.display = 'none';
+    document.getElementById('authMessage').innerHTML = '';
+    document.getElementById('authMessage').className = 'auth-message';
+}
+
+function switchAuthTab(tab) {
+    const loginForm = document.getElementById('loginForm');
+    const registerForm = document.getElementById('registerForm');
+    const tabs = document.querySelectorAll('.auth-tab');
+    
+    tabs.forEach(t => t.classList.remove('active'));
+    
+    if (tab === 'login') {
+        loginForm.style.display = 'flex';
+        registerForm.style.display = 'none';
+        tabs[0].classList.add('active');
+    } else {
+        loginForm.style.display = 'none';
+        registerForm.style.display = 'flex';
+        tabs[1].classList.add('active');
+    }
+    document.getElementById('authMessage').innerHTML = '';
+    document.getElementById('authMessage').className = 'auth-message';
+}
+
+function showAuthMessage(message, type) {
+    const msgDiv = document.getElementById('authMessage');
+    msgDiv.innerHTML = message;
+    msgDiv.className = `auth-message ${type}`;
+    setTimeout(() => {
+        if (msgDiv.innerHTML === message) {
+            msgDiv.innerHTML = '';
+            msgDiv.className = 'auth-message';
+        }
+    }, 3000);
+}
+    
+    function loginUser() {
+        const username = document.getElementById('loginUsername').value;
+        const password = document.getElementById('loginPassword').value;
+        
+        if (!username || !password) {
+            document.getElementById('authMessage').innerHTML = '<span style="color: #FF5983;">Заполните все поля</span>';
+            return;
+        }
+        
+        fetch('/accounts/login/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'X-CSRFToken': getCookie('csrftoken')
+            },
+            body: `username=${encodeURIComponent(username)}&password=${encodeURIComponent(password)}`
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'success') {
+                document.getElementById('authMessage').innerHTML = '<span style="color: #00c853;">Успешный вход!</span>';
+                setTimeout(() => {
+                    closeAuthModal();
+                    location.reload();
+                }, 1000);
+            } else {
+                document.getElementById('authMessage').innerHTML = `<span style="color: #FF5983;">${data.message}</span>`;
+            }
+        })
+        .catch(error => {
+            document.getElementById('authMessage').innerHTML = '<span style="color: #FF5983;">Ошибка соединения</span>';
+        });
+    }
+    
+    function registerUser() {
+        const username = document.getElementById('regUsername').value;
+        const email = document.getElementById('regEmail').value;
+        const phone = document.getElementById('regPhone').value;
+        const password = document.getElementById('regPassword').value;
+        const password2 = document.getElementById('regPassword2').value;
+        
+        if (!username || !email || !password || !password2) {
+            document.getElementById('authMessage').innerHTML = '<span style="color: #FF5983;">Заполните обязательные поля</span>';
+            return;
+        }
+        
+        if (password !== password2) {
+            document.getElementById('authMessage').innerHTML = '<span style="color: #FF5983;">Пароли не совпадают</span>';
+            return;
+        }
+        
+        fetch('/accounts/register/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'X-CSRFToken': getCookie('csrftoken')
+            },
+            body: `username=${encodeURIComponent(username)}&email=${encodeURIComponent(email)}&phone=${encodeURIComponent(phone)}&password1=${encodeURIComponent(password)}&password2=${encodeURIComponent(password2)}`
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'success') {
+                document.getElementById('authMessage').innerHTML = '<span style="color: #00c853;">Регистрация успешна!</span>';
+                setTimeout(() => {
+                    closeAuthModal();
+                    location.reload();
+                }, 1000);
+            } else {
+                document.getElementById('authMessage').innerHTML = `<span style="color: #FF5983;">${data.message}</span>`;
+            }
+        })
+        .catch(error => {
+            document.getElementById('authMessage').innerHTML = '<span style="color: #FF5983;">Ошибка соединения</span>';
+        });
+    }
+    
+    function logoutUser(event) {
+        event.preventDefault();
+        fetch('/accounts/logout/', {
+            method: 'GET',
+            headers: {
+                'X-CSRFToken': getCookie('csrftoken')
+            }
+        })
+        .then(() => {
+            location.reload();
+        });
+    }
+    
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+    
+    // Закрытие модального окна при клике вне его
+    window.onclick = function(event) {
+        const modal = document.getElementById('authModal');
+        if (event.target === modal) {
+            closeAuthModal();
+        }
+    }
+    
+    document.addEventListener('DOMContentLoaded', function() {
+        function isElementInViewport(el) {
+            const rect = el.getBoundingClientRect();
+            const windowHeight = window.innerHeight || document.documentElement.clientHeight;
+            return rect.top <= windowHeight - 100;
+        }
+        
+        function handleVisibility() {
+            document.querySelectorAll('.animate-on-scroll:not(.visible)').forEach(el => {
+                if (isElementInViewport(el)) {
+                    el.classList.add('visible');
+                }
+            });
+            
+            const previewContainer = document.querySelector('.preview-container');
+            const previewArrows = document.querySelector('.preview-arrows');
+            
+            if (previewContainer && !previewContainer.classList.contains('visible')) {
+                if (isElementInViewport(previewContainer)) {
+                    previewContainer.classList.add('visible');
+                    setTimeout(() => {
+                        if (previewArrows) previewArrows.classList.add('visible');
+                    }, 300);
+                }
+            }
+        }
+        
+        handleVisibility();
+        window.addEventListener('scroll', handleVisibility);
+        window.addEventListener('resize', handleVisibility);
+    });
+</script>
+
+</body>
+</html>

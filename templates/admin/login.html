@@ -1,0 +1,111 @@
+{% extends "admin/base_site.html" %}
+{% load i18n static %}
+
+{% block extrastyle %}
+    {{ block.super }}
+    <style>
+        /* Специфичные стили для красивой формы логина */
+        body.login {
+            background: var(--bg-main) !important;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+        #container {
+            background: #ffffff;
+            border: 2px solid var(--text-dark);
+            border-radius: 14px;
+            box-shadow: none;
+            width: 100%;
+            max-width: 450px;
+            padding: 30px;
+        }
+        .login #header {
+            background: transparent !important;
+            color: var(--text-dark) !important;
+            border-bottom: none;
+            text-align: center;
+            padding: 0 0 20px 0;
+        }
+        .login #header a {
+            color: var(--text-dark) !important;
+            font-size: 28px;
+            font-weight: bold;
+        }
+        .form-row {
+            padding: 12px 0 !important;
+        }
+        .form-row input[type="text"], .form-row input[type="password"] {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid var(--text-dark);
+            border-radius: 10px;
+            box-sizing: border-box;
+        }
+        .submit-row {
+            text-align: center;
+            padding: 20px 0 0 0;
+        }
+        .submit-row input {
+            width: 100%;
+            background: var(--text-dark) !important;
+            color: var(--bg-main) !important;
+            cursor: pointer;
+        }
+.login #content-main {
+    width: 100%;
+}
+.form-row label {
+    display: block;
+    color: var(--accent-pink) !important;
+    font-family: "Involve-O", sans-serif;
+    font-size: 14px;
+    margin-bottom: 8px;
+    float: none !important; 
+    width: 100% !important;
+}
+.submit-row input {
+    background: white !important;
+    border: 2px solid var(--text-dark) !important;
+    color: var(--text-dark) !important;
+    padding: 14px 0;
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 10px;
+    text-transform: uppercase;
+    transition: 0.3s ease;
+}
+.submit-row input:hover {
+    background: var(--text-dark) !important;
+    color: var(--bg-main) !important;
+}
+.errors p.errornote {
+    background: var(--accent-pink) !important;
+    color: white !important;
+    border-radius: 10px;
+    border: none;
+}
+    </style>
+{% endblock %}
+
+{% block content %}
+<div id="content-main">
+    <form action="{{ app_path }}" method="post" id="login-form">{% csrf_token %}
+      <div class="form-row">
+        {{ form.username.errors }}
+        <label for="id_username" class="required">{{ form.username.label }}:</label> 
+        {{ form.username }}
+      </div>
+      <div class="form-row">
+        {{ form.password.errors }}
+        <label for="id_password" class="required">{% translate 'Password:' %}</label> 
+        {{ form.password }}
+        <input type="hidden" name="next" value="{{ next }}">
+      </div>
+      <div class="submit-row">
+        <input type="submit" value="{% translate 'Log in' %}">
+      </div>
+    </form>
+</div>
+{% endblock %}

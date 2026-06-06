@@ -1,0 +1,15 @@
+{% extends "admin/base_site.html" %}
+
+{% load static %}
+
+{% block title %}{{ title }} | {{ site_title }}{% endblock %}
+
+{% block extrastyle %}
+    {{ block.super }}
+    <link rel="stylesheet" href="{% static 'css/newstyle.css' %}">
+    <link rel="stylesheet" href="{% static 'css/custom_admin.css' %}">
+{% endblock %}
+
+{% block nav-global %}
+    <a href="/" style="font-weight: bold; color: var(--accent-pink);">Перейти на сайт</a>
+{% endblock %}

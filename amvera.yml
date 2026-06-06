@@ -1,0 +1,11 @@
+meta:
+  environment: python
+  toolchain:
+    name: pip
+    version: 3.11
+build:
+  requirementsPath: requirements.txt
+run:
+  command: gunicorn verenn.wsgi:application --bind 0.0.0.0:8080
+  containerPort: 8080
+  persistenceMount: /data

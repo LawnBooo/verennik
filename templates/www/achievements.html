@@ -1,0 +1,181 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}ПОРТФОЛИО{% endblock %}
+
+{% block content %}
+<div class="achievements-page-wrapper">
+    <section class="achievements-header">
+        <div class="container">
+            <h1 class="achievements-title">ПОРТФОЛИО</h1>
+            <p class="achievements-subtitle">
+                участие в конкурсах, показах и творческих проектах
+            </p>
+        </div>
+    </section>
+
+    <section class="awards-section">
+        <div class="container">
+            <h2 class="section-label">НАГРАДЫ</h2>
+            <div class="awards-grid">
+                
+                <div class="award-card animate-on-scroll">
+                    <div class="award-image">
+                        <img src="{% static 'img/награда1.png' %}" alt="Награда">
+                    </div>
+                    <p class="award-desc">Топ-10 лучших в номинации «Сделано в Забайкалье — производство года (2025)» </p>
+                </div>
+                <div class="award-card animate-on-scroll">
+                    <div class="award-image">
+                        <img src="{% static 'img/награда2.png' %}" alt="Награда">
+                    </div>
+                    <p class="award-desc">Топ-10 лучших в номинации «Сделано в Забайкалье — производство года (2024)»</p>
+                </div>
+                <div class="award-card animate-on-scroll">
+                    <div class="award-image">
+                        <img src="{% static 'img/награда3.png' %}" alt="Награда">
+                    </div>
+                    <p class="award-desc">Топ-10 лучших в номинации «Сделано в Забайкалье — производство года (2023)»</p>
+                </div>
+                <div class="award-card animate-on-scroll">
+                    <div class="award-image-d">
+                        <img src="{% static 'img/даурия.png' %}" alt="Награда">
+                    </div>
+                    <p class="award-desc">1 место в Забайкальском международном молодёжном фестивале-конкурсе культурного наследия</p>
+                </div>
+                
+            </div>
+        </div>
+    </section>
+
+<section class="fashion-slider-section">
+        <div class="container slider-perspective">
+            <div class="fashion-carousel" id="fashionCarousel">
+                <div class="carousel-card" data-index="0" data-title="«МОЙ БИЗНЕС — FASHION FEST» 2024" data-subtitle="Фестиваль Забайкальской моды «Мой бизнес - Fashion Fest» 2024">
+                    <img src="{% static 'img/slider1.jpg' %}" alt="Показ 1">
+                </div>
+                <div class="carousel-card" data-index="1" data-title="ZABFW" data-subtitle="Забайкальская неделя моды 2025">
+                    <img src="{% static 'img/slider2.jpg' %}" alt="Показ 2">
+                </div>
+                <div class="carousel-card active" data-index="2" data-title="КОЛЛАБОРАЦИЯ С БРЕНДОМ «AtLiger»" data-subtitle="Авторская роспись и кастомизация">
+                    <img src="{% static 'img/slider3.png' %}" alt="Показ 3">
+                </div>
+                <div class="carousel-card" data-index="3" data-title="КОЛЛАБОРАЦИЯ С БРЕНДОМ «ЗАБАВА.РУ»" data-subtitle="">
+                    <img src="{% static 'img/slider4.png' %}" alt="Показ 4">
+                </div>
+                <div class="carousel-card" data-index="4" data-title="КОЛЛАБОРАЦИЯ С БРЕНДОМ «Сашка Барашка»" data-subtitle="Детская мода">
+                    <img src="{% static 'img/slider5.png' %}" alt="Показ 5">
+                </div>
+            </div>
+            
+            <div class="carousel-caption">
+                <h3 class="caption-title" id="carouselTitle">«МОЙ БИЗНЕС — FASHION FEST» 2024</h3>
+                <p class="caption-subtitle" id="carouselSubtitle">Фестиваль Забайкальской моды «Мой бизнес - Fashion Fest» 2024г</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="portfolio-gallery-section">
+    <div class="container">
+        <!-- Убрали visible из классов ниже -->
+        <div class="gallery-grid preview-container preview-animate"> 
+            <div class="preview-item">
+                <img src="{% static 'img/царевна.png' %}" alt="Работа 1">
+            </div>
+            <div class="preview-item">
+                <img src="{% static 'img/гриб.jpg' %}" alt="Работа 2">
+            </div>
+            <div class="preview-item">
+                <img src="{% static 'img/машина.jpg' %}" alt="Работа 3">
+            </div>
+            <div class="preview-item">
+                <img src="{% static 'img/лиса.png' %}" alt="Работа 4">
+            </div>
+            <div class="preview-item">
+                <img src="{% static 'img/лондон.png' %}" alt="Работа 5">
+            </div>
+            <div class="preview-item">
+                <img src="{% static 'img/ларец.png' %}" alt="Работа 6">
+            </div>
+            <div class="preview-item">
+                <img src="{% static 'img/мышь.jpg' %}" alt="Работа 7">
+            </div>
+            <div class="preview-item">
+                <img src="{% static 'img/кошелёк.png' %}" alt="Работа 8">
+            </div>
+        </div>
+    </div>
+</section>
+</div>
+
+    <script>
+document.addEventListener("DOMContentLoaded", function () {
+    const animatedContainers = document.querySelectorAll('.preview-animate');
+
+    const observer = new IntersectionObserver((entries, observer) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+                observer.unobserve(entry.target);
+            }
+        });
+    }, {
+        threshold: 0.15
+    });
+
+    animatedContainers.forEach(container => {
+        observer.observe(container);
+    });
+});
+</script>
+    
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    const cards = document.querySelectorAll('.carousel-card');
+    const titleEl = document.getElementById('carouselTitle');
+    const subtitleEl = document.getElementById('carouselSubtitle');
+    const totalCards = cards.length;
+
+    function updateCarousel(activeIndex) {
+        cards.forEach((card) => {
+            const cardIndex = parseInt(card.getAttribute('data-index'));
+
+            let offset = cardIndex - activeIndex;
+            
+            if (offset < -2) offset += totalCards;
+            if (offset > 2) offset -= totalCards;
+
+            card.classList.remove('active', 'prev-1', 'prev-2', 'next-1', 'next-2', 'hidden');
+
+            if (offset === 0) {
+                card.classList.add('active');
+                titleEl.textContent = card.getAttribute('data-title');
+                subtitleEl.textContent = card.getAttribute('data-subtitle');
+            } else if (offset === -1) {
+                card.classList.add('prev-1');
+            } else if (offset === -2) {
+                card.classList.add('prev-2');
+            } else if (offset === 1) {
+                card.classList.add('next-1');
+            } else if (offset === 2) {
+                card.classList.add('next-2');
+            } else {
+                card.classList.add('hidden');
+            }
+        });
+    }
+
+    cards.forEach((card) => {
+        card.addEventListener('mouseenter', function() {
+            const index = parseInt(this.getAttribute('data-index'));
+            updateCarousel(index);
+        });
+    });
+
+    updateCarousel(2);
+});
+</script>
+    
+
+</div>
+{% endblock %}
