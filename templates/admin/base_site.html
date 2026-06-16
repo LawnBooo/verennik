@@ -6,10 +6,23 @@
 
 {% block extrastyle %}
     {{ block.super }}
-    <link rel="stylesheet" href="{% static 'css/newstyle.css' %}">
     <link rel="stylesheet" href="{% static 'css/custom_admin.css' %}">
 {% endblock %}
 
 {% block nav-global %}
-    <a href="/" style="font-weight: bold; color: var(--accent-pink);">Перейти на сайт</a>
+    <a href="/" style="
+        font-weight: 600; 
+        color: var(--accent-pink); 
+        text-decoration: none;
+        padding: 8px 20px;
+        border: 2px solid var(--accent-pink);
+        border-radius: var(--border-radius);
+        transition: all var(--transition-speed) ease;
+        display: inline-block;
+        font-size: 14px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    ">
+        На сайт
+    </a>
 {% endblock %}

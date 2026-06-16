@@ -386,7 +386,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     var serviceBtns = document.querySelectorAll('.service-btn');
     serviceBtns.forEach(function(btn) {
-        // Использовали btn вместо this
+
         if (btn.textContent.trim() === 'ПОДРОБНЕЕ') {
             return; 
         }
@@ -404,7 +404,6 @@ document.addEventListener('DOMContentLoaded', function() {
     
     updateCartUI();
     
-    // Добавление в корзину
     document.querySelectorAll('.cart-add-btn').forEach(btn => {
         btn.addEventListener('click', function(e) {
             e.preventDefault();
@@ -433,15 +432,13 @@ document.addEventListener('DOMContentLoaded', function() {
             localStorage.setItem('cart', JSON.stringify(cart));
             updateCartUI();
             
-            // Анимация
             this.style.transform = 'scale(1.2)';
             setTimeout(() => {
                 this.style.transform = 'scale(1)';
             }, 200);
         });
     });
-    
-    // Обработка изменения количества и удаления из корзины
+
     document.querySelector('.cart-items-container').addEventListener('click', function(e) {
         let cart = JSON.parse(localStorage.getItem('cart')) || [];
         const target = e.target;
@@ -476,7 +473,6 @@ document.addEventListener('DOMContentLoaded', function() {
         updateCartUI();
     });
     
-    // Очистка корзины
     document.querySelector('.clear-cart-btn').addEventListener('click', function() {
         if(confirm("Очистить корзину?")) {
             localStorage.removeItem('cart');
@@ -484,7 +480,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
     
-    // Оформление заказа из корзины
     document.querySelector('.checkout-btn').addEventListener('click', function() {
         let cart = JSON.parse(localStorage.getItem('cart')) || [];
         if(cart.length === 0) return;
@@ -495,11 +490,9 @@ document.addEventListener('DOMContentLoaded', function() {
         openOrderModal(`Корзина товаров: ${itemsSummary}`, totalSum, null);
     });
     
-    // Избранное
     const favButtons = document.querySelectorAll('.fav-btn');
     let favorites = JSON.parse(localStorage.getItem('favorites')) || [];
     
-    // Сохраняем все товары в localStorage
     let allProducts = [];
     document.querySelectorAll('.product-card').forEach(card => {
         const favBtn = card.querySelector('.fav-btn');
@@ -533,7 +526,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
     
-    // Сохранение скролла при фильтрации
     const tabs = document.querySelectorAll(".filter-tab");
     if (sessionStorage.getItem("sidebar_scroll")) {
         window.scrollTo(0, parseInt(sessionStorage.getItem("sidebar_scroll")));

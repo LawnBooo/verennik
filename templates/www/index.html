@@ -31,159 +31,189 @@
 </div>
     
     </section>
-    
-    <section class="hero-video">
-    <video class="hero-video-bg" autoplay muted loop playsinline>
-        <source src="{% static 'video/Untitled.mp4' %}" type="video/mp4">
-        Тут было видео, но что-то пошло не так
-    </video>
+
+    <div class="sticky-wrapper">
         
-        <div class="hero-video-inner container">
-            <div class="hero-text">
-                <p>
-                    Уникальная одежда с характером.
-                    Превращаем обычные вещи в искусство:
-                    <br>тай-дай, авторская роспись и магия кастомизации.
-                </p>
-                <p class="script-text">
-                    НАРУШАЙ ПРАВИЛА, СМЕШИВАЙ ЦВЕТА,
-                    СОЗДАВАЙ ТО, ОТ ЧЕГО ПЕРЕХВАТЫВАЕТ ДЫХАНИЕ!
-                </p>
-            </div>
+        <section class="hero-video sticky-section">
+            <video class="hero-video-bg" autoplay muted loop playsinline>
+                <source src="{% static 'video/Untitled.mp4' %}" type="video/mp4">
+                Тут было видео, но что-то пошло не так
+            </video>
             
-    <div class="hero-right">
-    <img src="{% static 'img/title.png' %}" alt="ИСКУССТВО КОТОРОЕ ТЫ НОСИШЬ" class="hero-title-img">
-        <a href="{% url "about" %}" class="hero-btn">ЗАКАЗАТЬ</a>
-    </div>
-        </div>
-    </section>
-    
-    <section class="brand-section">
-    <div class="philosophy-wrapper">
-        <div class="container philosophy-container">
-            <div class="philosophy-content">
-                <h2 class="philosophy-title-text">ФИЛОСОФИЯ БРЕНДА</h2>
-                <div class="philosophy-text">
-                    <p>История бренда начинается с поиска себя. Ксения однажды поняла: носить то, что есть у всех — скучно. Так родилась идея столкнуть тай-дая с высокой модой, а художественную роспись превратить в способ заявить о себе миру.</p>
-                    <p>Одежда бренда не штампуется, а создаётся под человека. Неповторимое можно повторить, но даже похожий дизайн будет отличаться от первоначального красками, спиралями, пятнами и линиями. Старым вещам даётся вторая жизнь: они перекрашиваются, дорисовываются, перешиваются, влюбляют в себя заново. <br>
-                        Возраст и навыки для творчества не важны! Любой может почувствовать себя художником благодаря регулярным мастер-классам</p>
+            <div class="hero-video-inner container">
+                <div class="hero-text animate-on-scroll">
+                    <p>
+                        Уникальная одежда с характером.
+                        Превращаем обычные вещи в искусство:
+                        <br>тай-дай, авторская роспись и магия кастомизации.
+                    </p>
+                    <p class="script-text">
+                        НАРУШАЙ ПРАВИЛА, СМЕШИВАЙ ЦВЕТА,
+                        СОЗДАВАЙ ТО, ОТ ЧЕГО ПЕРЕХВАТЫВАЕТ ДЫХАНИЕ!
+                    </p>
                 </div>
-                <div class="photo-caption">
+                
+                <div class="hero-right animate-on-scroll">
+                    <img src="{% static 'img/title.png' %}" alt="ИСКУССТВО КОТОРОЕ ТЫ НОСИШЬ" class="hero-title-img">
+                    <a href="{% url "about" %}" class="hero-btn">ЗАКАЗАТЬ</a>
+                </div>
+            </div>
+        </section>
+        
+        <section class="philosophy-wrapper sticky-section">
+            <div class="container philosophy-container">
+                <div class="philosophy-content">
+                    <h2 class="philosophy-title-text animate-on-scroll">ФИЛОСОФИЯ БРЕНДА</h2>
+                    <div class="philosophy-text animate-on-scroll">
+                        <p>История бренда начинается с поиска себя. Ксения однажды поняла: носить то, что есть у всех — скучно. Так родилась идея столкнуть тай-дая с высокой модой, а художественную роспись превратить в способ заявить о себе миру.</p>
+                        <p>Одежда бренда не штампуется, а создаётся под человека. Неповторимое можно повторить, но даже похожий дизайн будет отличаться от первоначального красками, спиралями, пятнами и линиями. Старым вещам даётся вторая жизнь: они перекрашиваются, дорисовываются, перешиваются, влюбляют в себя заново. <br>
+                            Возраст и навыки для творчества не важны! Любой может почувствовать себя художником благодаря регулярным мастер-классам</p>
+                    </div>
+                    <div class="photo-caption animate-on-scroll">
                         <p class="name">КСЕНИЯ ВЕРЕННИК</p>
                         <p class="role">дизайнер одежды</p>
                     </div>
+                </div>
+
+                <div class="philosophy-visual">
+                    <div class="ksenia-photo-block">
+                        <img src="{% static 'img/psi1.png' %}" class="decor-blob animate-on-scroll">
+                    </div>
+                </div>
             </div>
-
-            <div class="philosophy-visual">
-                <div class="ksenia-photo-block">
-                    <img src="{% static 'img/psi1.png' %}" class="decor-blob">
-                </div>
-                    
-                </div>
-        </div>
-    </div>
-
-    <div class="yellow-divider"></div>
-
-    <div class="feedback-wrapper">
-        <div class="feedback-bg-pattern"></div> 
+        </section>
         
-        <div class="container feedback-grid">
-            <div class="feedback-info">
-                <h2 class="feedback-title">ОСТАЛИСЬ ВОПРОСЫ? ХОТИТЕ ОТПРАВИТЬ ОТЗЫВ? <br>ОСТАВИТЬ ЗАЯВКУ? ВОСПОЛЬЗУЙТЕСЬ ФОРМОЙ:</h2>
-                
-                <form class="feedback-form" id="feedback-form" method="post">
-    {% csrf_token %}
-    <div class="form-item">
-        <label>ИМЯ *</label>
-        <input type="text" name="name" required>
+        <section class="feedback-wrapper sticky-section">
+            <div class="feedback-bg-pattern"></div> 
+            
+            <div class="container feedback-grid">
+                <div class="feedback-info">
+                    <h2 class="feedback-title animate-on-scroll">ОСТАЛИСЬ ВОПРОСЫ? ХОТИТЕ ОТПРАВИТЬ ОТЗЫВ? <br>ОСТАВИТЬ ЗАЯВКУ? ВОСПОЛЬЗУЙТЕСЬ ФОРМОЙ:</h2>
+                    
+                    <form class="feedback-form" id="feedback-form" method="post">
+                        {% csrf_token %}
+                        <div class="form-item animate-on-scroll">
+                            <label>ИМЯ *</label>
+                            <input type="text" name="name" required>
+                        </div>
+                        <div class="form-item animate-on-scroll">
+                            <label>НОМЕР ТЕЛЕФОНА *</label>
+                            <input type="tel" name="phone" required>
+                        </div>
+                        <div class="form-item animate-on-scroll">
+                            <textarea name="message" placeholder="Введите текст..."></textarea>
+                        </div>
+                        <div id="form-status" style="margin-top: 15px; font-weight: bold; display: none;"></div>
+                        <button type="submit" form="feedback-form" class="feedback-btn animate-on-scroll">ОТПРАВИТЬ</button>
+                    </form>
+                </div>
+
+                <div class="feedback-visual">
+                    <div class="photo-wrapper">
+                        <img src="{% static 'img/form.png' %}" class="clothes-photo animate-on-scroll">
+                    </div>
+                </div>
+            </div>
+        </section>
+        
     </div>
-    <div class="form-item">
-        <label>НОМЕР ТЕЛЕФОНА *</label>
-        <input type="tel" name="phone" required>
-    </div>
-    <div class="form-item">
-        <textarea name="message" placeholder="Введите текст..."></textarea>
-    </div>
-    <div id="form-status" style="margin-top: 15px; font-weight: bold; display: none;"></div>
-                    <button type="submit" form="feedback-form" class="feedback-btn">ОТПРАВИТЬ</button>
-</form>
 
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    const form = document.getElementById('feedback-form');
-    const statusBlock = document.getElementById('form-status');
-    const submitBtn = document.querySelector('.feedback-btn');
-
-    if (form) {
-        form.addEventListener('submit', function(e) {
-            e.preventDefault(); 
-
-            submitBtn.disabled = true;
-            submitBtn.innerText = 'ОТПРАВКА...';
-            statusBlock.style.display = 'block';
-            statusBlock.style.color = '#0D1845';
-            statusBlock.innerText = 'Отправляем ваше сообщение...';
-
-            const formData = new FormData(form);
-
-            let postUrl = window.location.href;
-            if (!postUrl.endsWith('/')) {
-                postUrl += '/';
-            }
-
-            fetch('/', {
-    method: 'POST',
-    body: formData,
-    headers: {
-        'X-Requested-With': 'XMLHttpRequest',
-        'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
-    }
-})
-            .then(response => {
-                const contentType = response.headers.get("content-type");
-                if (contentType && contentType.includes("application/json")) {
-                    return response.json().then(data => ({ status: response.status, body: data }));
-                } else {
-                    return response.text().then(text => {
-                        throw new Error(`Сервер вернул HTML вместо JSON. Возможно, ошибка в settings.py или urls.py. Текст: ${text.substring(0, 200)}`);
-                    });
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        function isElementInViewport(el) {
+            const rect = el.getBoundingClientRect();
+            const windowHeight = window.innerHeight || document.documentElement.clientHeight;
+            const threshold = 0.2;
+            return rect.top <= windowHeight - threshold * windowHeight && rect.bottom >= 0;
+        }
+        
+        function handleScrollAnimation() {
+            const elements = document.querySelectorAll('.animate-on-scroll');
+            elements.forEach(el => {
+                if (isElementInViewport(el) && !el.classList.contains('show')) {
+                    el.classList.add('show');
                 }
-            })
-            .then(res => {
-  
-                if (res.body.status === 'success') {
-                    statusBlock.style.color = 'var(--accent-pink)';
-                    statusBlock.innerText = 'СПАСИБО! Ваша заявка успешно отправлена.';
-                    form.reset(); 
-                } else {
-                    statusBlock.style.color = 'var(--accent-pink)';
-                    statusBlock.innerText = res.body.message || 'Произошла ошибка при отправке.';
-                }
-            })
-            .catch(error => {
-                statusBlock.style.color = 'var(--accent-pink)';
-                statusBlock.innerText = 'Ошибка обработки запроса на сервере.';
-                console.error('Детальная ошибка для отладки:', error.message);
-            })
-            .finally(() => {
-                submitBtn.disabled = false;
-                submitBtn.innerText = 'ОТПРАВИТЬ';
             });
-        });
-    }
-});
-</script>
-                
-    </div>
+        }
 
-    <div class="feedback-visual">
-    <div class="photo-wrapper">
-        <img src="{% static 'img/form.png' %}" class="clothes-photo">
-    </div>
-    </div>
-        </div>
-    </div>
-</section>
-    
+        window.addEventListener('scroll', handleScrollAnimation);
+        window.addEventListener('resize', handleScrollAnimation);
+        setTimeout(handleScrollAnimation, 300);
+
+        const video = document.querySelector('.hero-video-bg');
+        if (video) {
+            const videoObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        video.classList.add('show');
+                    }
+                });
+            }, { threshold: 0.3 });
+            videoObserver.observe(video);
+            if (isElementInViewport(video)) {
+                setTimeout(() => video.classList.add('show'), 500);
+            }
+        }
+
+        const form = document.getElementById('feedback-form');
+        const statusBlock = document.getElementById('form-status');
+        const submitBtn = document.querySelector('.feedback-btn');
+
+        if (form) {
+            form.addEventListener('submit', function(e) {
+                e.preventDefault(); 
+
+                submitBtn.disabled = true;
+                submitBtn.innerText = 'ОТПРАВКА...';
+                statusBlock.style.display = 'block';
+                statusBlock.style.color = '#0D1845';
+                statusBlock.innerText = 'Отправляем ваше сообщение...';
+
+                const formData = new FormData(form);
+                let postUrl = window.location.href;
+                if (!postUrl.endsWith('/')) {
+                    postUrl += '/';
+                }
+
+                fetch('/', {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+                    }
+                })
+                .then(response => {
+                    const contentType = response.headers.get("content-type");
+                    if (contentType && contentType.includes("application/json")) {
+                        return response.json().then(data => ({ status: response.status, body: data }));
+                    } else {
+                        return response.text().then(text => {
+                            throw new Error(`Сервер вернул HTML вместо JSON. Текст: ${text.substring(0, 200)}`);
+                        });
+                    }
+                })
+                .then(res => {
+                    if (res.body.status === 'success') {
+                        statusBlock.style.color = 'var(--accent-pink)';
+                        statusBlock.innerText = 'СПАСИБО! Ваша заявка успешно отправлена.';
+                        form.reset(); 
+                    } else {
+                        statusBlock.style.color = 'var(--accent-pink)';
+                        statusBlock.innerText = res.body.message || 'Произошла ошибка при отправке.';
+                    }
+                })
+                .catch(error => {
+                    statusBlock.style.color = 'var(--accent-pink)';
+                    statusBlock.innerText = 'Ошибка обработки запроса на сервере.';
+                    console.error('Детальная ошибка для отладки:', error.message);
+                })
+                .finally(() => {
+                    submitBtn.disabled = false;
+                    submitBtn.innerText = 'ОТПРАВИТЬ';
+                });
+            });
+        }
+    });
+    </script>
 {% endblock %}
