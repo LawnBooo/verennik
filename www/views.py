@@ -3,6 +3,8 @@ from catalog.models import Product, Category
 from django.http import JsonResponse
 from django.core.mail import send_mail
 from django.conf import settings
+from constructor.models import ConstructorOrder
+from django.contrib.auth.decorators import login_required
 
 def index_view(request):
     if request.method == 'POST':
@@ -79,3 +81,14 @@ def favorites(request):
 
 def new_life(request):
     return render(request, 'www/new_life.html')
+
+@login_required
+def profile_view(request):
+    """Личный кабинет пользователя"""
+    # Получаем заказы из конструктора
+    orders = ConstructorOrder.objects.filter(user=request.user).order_by('-created_at')
+    
+    context = {
+        'orders': orders,
+    }
+    return render(request, 'www/profile.html', context)

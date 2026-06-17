@@ -2010,6 +2010,48 @@ main {
     color: var(--bg-main);
 }
 
+/* Стили для модального окна конструктора */
+#constructorModal .modal-content {
+    max-width: 500px;
+}
+
+#constructorModal .order-btn {
+    background-color: transparent;
+    border: 2px solid var(--text-dark);
+    border-radius: 10px;
+    color: var(--text-dark);
+    padding: 14px 55px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+    margin: 10px auto 0;
+    display: block;
+    transition: all 0.3s ease;
+}
+
+#constructorModal .order-btn:hover {
+    background-color: var(--text-dark);
+    color: var(--bg-main);
+}
+
+#constructorModal .order-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+#constructorModal .success-message {
+    text-align: center;
+    padding: 30px;
+    color: var(--text-dark);
+    margin-top: 20px;
+}
+
+#constructorModal .success-message p:first-child {
+    font-size: 24px;
+    margin-bottom: 10px;
+    color: var(--bg-main);
+}
+
 .constructor-grid {
     display: grid;
     grid-template-columns: 1.3fr 1fr;
@@ -2125,7 +2167,7 @@ main {
     transition: background-color 0.3s ease;
     pointer-events: none;
 }
-
+/* Паттерны для тай-дай */
 #tie-dye-overlay {
     position: absolute;
     top: 0;
@@ -2133,19 +2175,50 @@ main {
     width: 100%;
     height: 100%;
     z-index: 3;
+    pointer-events: none;
     mix-blend-mode: multiply;
-
-    mask-size: 100% 100%;
+    opacity: 0.7;
+    
+    mask-size: contain;
     mask-repeat: no-repeat;
     mask-position: center;
-    -webkit-mask-size: 100% 100%;
+    -webkit-mask-size: contain;
     -webkit-mask-repeat: no-repeat;
     -webkit-mask-position: center;
-
+    
     background-size: cover;
     background-position: center;
-    pointer-events: none;
+    background-repeat: no-repeat;
     display: none;
+}
+
+#pattern-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 3;
+    pointer-events: none;
+    mix-blend-mode: multiply;
+    opacity: 0.5;
+    
+    mask-size: contain;
+    mask-repeat: no-repeat;
+    mask-position: center;
+    -webkit-mask-size: contain;
+    -webkit-mask-repeat: no-repeat;
+    -webkit-mask-position: center;
+    
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    display: none;
+}
+
+#tie-dye-overlay.active,
+#pattern-overlay.active {
+    display: block;
 }
 
 #print-container {

@@ -21,6 +21,16 @@
                         <img src="{% static 'img/tshirt_front.png' %}" id="product-img" alt="Конструктор">
                         <div id="color-overlay"></div>
                         <div id="tie-dye-overlay"></div>
+                        <div id="pattern-overlay"
+                        style="position: absolute; top: 0;
+                        left: 0; width: 100%; height: 100%;
+                        z-index: 3; pointer-events: none;
+                        mix-blend-mode: multiply; opacity: 0.5;
+                        background-size: cover; background-position: center;
+                        background-repeat: no-repeat; display: none; mask-size: contain;
+                        mask-repeat: no-repeat; mask-position: center;
+                        -webkit-mask-size: contain; -webkit-mask-repeat: no-repeat;
+                        -webkit-mask-position: center;"></div>
                         
                         <div id="print-container" class="draggable-resizable" style="display: none;">
                             <button id="remove-print-btn" title="Удалить принт">&times;</button>
@@ -47,6 +57,43 @@
                 <div class="action-buttons">
                     <button class="btn-outline" id="send-btn">ОТПРАВИТЬ</button>
                     <button class="btn-outline" id="save-btn">СОХРАНИТЬ</button>
+                </div>
+            </div>
+
+            <div id="constructorModal" class="modal">
+                <div class="modal-content">
+                    <span class="close" id="closeConstructorModal">&times;</span>
+                    <h2>ОТПРАВКА ЗАЯВКИ</h2>
+                    <p style="color: var(--text-dark); font-size: 16px; margin-bottom: 20px;">
+                        Заполните форму, и мы свяжемся с вами для обсуждения деталей
+                    </p>
+                    
+                    <div id="designPreview" class="product-info" style="margin-bottom: 20px; text-align: center;">
+                        <p style="color: var(--text-dark); font-size: 14px; opacity: 0.7;">
+                            Ваш дизайн будет отправлен вместе с заявкой
+                        </p>
+                    </div>
+                    
+                    <form id="constructorOrderForm" class="order-form">
+                        <div class="form-group">
+                            <input type="text" id="constructorName" placeholder="ИМЯ" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="tel" id="constructorPhone" placeholder="НОМЕР ТЕЛЕФОНА" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="email" id="constructorEmail" placeholder="EMAIL (необязательно)">
+                        </div>
+                        <div class="form-group">
+                            <textarea id="constructorComment" placeholder="КОММЕНТАРИЙ К ЗАЯВКЕ..." rows="3"></textarea>
+                        </div>
+                        <button type="submit" class="order-btn">ОТПРАВИТЬ ЗАЯВКУ</button>
+                    </form>
+                    
+                    <div id="constructorSuccessMessage" class="success-message" style="display: none;">
+                        <p>СПАСИБО ЗА ЗАЯВКУ!</p>
+                        <p>Мы свяжемся с вами в ближайшее время</p>
+                    </div>
                 </div>
             </div>
 
@@ -146,8 +193,9 @@ document.addEventListener('DOMContentLoaded', function() {
     const productImg = document.getElementById('product-img');
     const colorOverlay = document.getElementById('color-overlay');
     const tieDyeOverlay = document.getElementById('tie-dye-overlay');
+    const patternOverlay = document.getElementById('pattern-overlay');
     const hexInput = document.getElementById('hex-input');
-    const applyColorBtn = document.getElementById('apply-color'); // Кнопка "ПРИМЕНИТЬ"
+    const applyColorBtn = document.getElementById('apply-color');
     const currentSizeLabel = document.getElementById('current-size');
     const productName = document.getElementById('product-name');
     const printContainer = document.getElementById('print-container');
@@ -155,31 +203,32 @@ document.addEventListener('DOMContentLoaded', function() {
     const removePrintBtn = document.getElementById('remove-print-btn');
     const tieDyeGroup = document.getElementById('tiedye-options-group');
 
-    // Пути к текстурам окрашивания
     const textures = {
-        spots: "{% static 'img/patterns/spots.png' %}",
-        spiral: "{% static 'img/patterns/spiral.png' %}",
-        stripes: "{% static 'img/patterns/stripes.png' %}"
+        spots: "{% static 'img/spots.png' %}",
+        spiral: "{% static 'img/spiral.png' %}",
+        stripes: "{% static 'img/stripes.png' %}"
     };
 
-    function updateProductDisplay(type, side) {
+    function updateMasks(type, side) {
         const newSrc = `/static/img/${type}_${side}.png`;
         productImg.src = newSrc;
         
-        // Передаем правильный URL в маску
         const maskUrl = `url(${newSrc})`;
-        
-        colorOverlay.style.webkitMaskImage = maskUrl;
-        colorOverlay.style.maskImage = maskUrl;
-
-        tieDyeOverlay.style.webkitMaskImage = maskUrl;
-        tieDyeOverlay.style.maskImage = maskUrl;
+        [colorOverlay, tieDyeOverlay, patternOverlay].forEach(el => {
+            if (el) {
+                el.style.webkitMaskImage = maskUrl;
+                el.style.maskImage = maskUrl;
+            }
+        });
         
         document.querySelector('.mini-preview[data-side="front"] img').src = `/static/img/${type}_front.png`;
         document.querySelector('.mini-preview[data-side="back"] img').src = `/static/img/${type}_back.png`;
     }
 
-    // Вкладки типов одежды
+    function updateProductDisplay(type, side) {
+        updateMasks(type, side);
+    }
+
     document.querySelectorAll('.tab-btn').forEach(btn => {
         btn.addEventListener('click', function() {
             if(this.innerText.includes("БУДЕТ ПОЗЖЕ")) return;
@@ -194,11 +243,10 @@ document.addEventListener('DOMContentLoaded', function() {
             
             updateProductDisplay(type, 'front');
         });
-        
-        updateProductDisplay('tshirt', 'front');
     });
 
-    // Переключение сторон
+    updateProductDisplay('tshirt', 'front');
+
     document.querySelectorAll('.mini-preview').forEach(thumb => {
         thumb.addEventListener('click', function() {
             document.querySelectorAll('.mini-preview').forEach(t => t.classList.remove('active'));
@@ -211,36 +259,69 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // ЛОГИКА: Тай-дай опции теперь открываются и для Тай-дай, и для Смешанного
     document.querySelectorAll('[data-cust]').forEach(btn => {
         btn.addEventListener('click', function() {
             this.parentNode.querySelector('.select-btn.active')?.classList.remove('active');
             this.classList.add('active');
 
             const mode = this.dataset.cust;
+            
+            tieDyeOverlay.style.display = 'none';
+            tieDyeOverlay.style.backgroundImage = 'none';
+            patternOverlay.style.display = 'none';
+            patternOverlay.style.backgroundImage = 'none';
+            document.querySelectorAll('[data-pattern]').forEach(b => b.classList.remove('active'));
+            
             if (mode === 'tiedye' || mode === 'mixed') {
                 tieDyeGroup.style.display = 'block';
-                tieDyeOverlay.style.display = 'block';
+                const activePattern = document.querySelector('[data-pattern].active');
+                if (activePattern) {
+                    applyPattern(activePattern.dataset.pattern);
+                }
             } else {
                 tieDyeGroup.style.display = 'none';
-                tieDyeOverlay.style.display = 'none';
-                tieDyeOverlay.style.backgroundImage = 'none';
-                document.querySelectorAll('[data-pattern]').forEach(b => b.classList.remove('active'));
             }
         });
     });
 
-    // Выбор текстуры тай-дай
+    function applyPattern(pattern) {
+        const textureUrl = textures[pattern];
+        if (!textureUrl) {
+            console.log('Паттерн не найден:', pattern);
+            return;
+        }
+        
+        console.log('Применяем паттерн:', pattern, textureUrl);
+        
+        if (pattern === 'spots') {
+            patternOverlay.style.display = 'block';
+            patternOverlay.style.backgroundImage = `url(${textureUrl})`;
+            patternOverlay.style.opacity = '0.5';
+            
+            tieDyeOverlay.style.display = 'none';
+            tieDyeOverlay.style.backgroundImage = 'none';
+            console.log('Показан patternOverlay для пятен');
+        } else {
+            tieDyeOverlay.style.display = 'block';
+            tieDyeOverlay.style.backgroundImage = `url(${textureUrl})`;
+            tieDyeOverlay.style.opacity = '0.7';
+            tieDyeOverlay.style.mixBlendMode = 'multiply';
+            
+            patternOverlay.style.display = 'none';
+            patternOverlay.style.backgroundImage = 'none';
+            console.log('Показан tieDyeOverlay для:', pattern);
+        }
+    }
+
     document.querySelectorAll('[data-pattern]').forEach(btn => {
         btn.addEventListener('click', function() {
             this.parentNode.querySelector('.select-btn.active')?.classList.remove('active');
             this.classList.add('active');
             const pattern = this.dataset.pattern;
-            tieDyeOverlay.style.backgroundImage = `url(${textures[pattern]})`;
+            applyPattern(pattern);
         });
     });
 
-    // Табы управления (Продукт / Объект)
     document.querySelectorAll('.p-tab').forEach(tab => {
         tab.addEventListener('click', function() {
             document.querySelectorAll('.p-tab').forEach(t => t.classList.remove('active'));
@@ -252,14 +333,17 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // Основная функция применения цвета
     function applyNewColor(color) {
         if(!color) return;
-        hexInput.value = color; // Синхронизируем инпут
-        colorOverlay.style.backgroundColor = color; // Накладываем цвет
+        hexInput.value = color;
+        colorOverlay.style.backgroundColor = color;
+        
+        const activePattern = document.querySelector('[data-pattern].active');
+        if (activePattern) {
+            applyPattern(activePattern.dataset.pattern);
+        }
     }
 
-    // Обработка клика по палитре
     document.querySelectorAll('.color-dot').forEach(dot => {
         dot.addEventListener('click', function() {
             const color = this.dataset.color;
@@ -269,17 +353,14 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // ИСПРАВЛЕНИЕ: Прямой обработчик для кнопки "ПРИМЕНИТЬ"
     applyColorBtn.addEventListener('click', function(e) {
-        e.preventDefault(); // На всякий случай
+        e.preventDefault();
         const customColor = hexInput.value;
-        applyNewColor(customColor); // Применяем цвет из инпута
+        applyNewColor(customColor);
         
-        // Снимаем "активность" с точек палитры
         document.querySelector('.color-dot.active')?.classList.remove('active');
     });
 
-    // Загрузка принта
     document.getElementById('upload-print').addEventListener('change', function(e) {
         if (e.target.files && e.target.files[0]) {
             const reader = new FileReader();
@@ -287,7 +368,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 printLayer.src = event.target.result;
                 printContainer.style.display = 'block';
                 
-                // Центрируем принт при первичной загрузке
                 printContainer.style.transform = 'translate(0px, 0px)';
                 printContainer.setAttribute('data-x', 0);
                 printContainer.setAttribute('data-y', 0);
@@ -298,16 +378,14 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // УДАЛЕНИЕ ПРИНТА
     removePrintBtn.addEventListener('click', function(e) {
         e.preventDefault();
-        e.stopPropagation(); // Предотвращаем срабатывание кликов по контейнеру
+        e.stopPropagation();
         printLayer.src = '';
         printContainer.style.display = 'none';
-        document.getElementById('upload-print').value = ''; // Сбрасываем значение инпута файла
+        document.getElementById('upload-print').value = '';
     });
-    
-    // Выбор размера
+
     document.querySelectorAll('.size-btn').forEach(btn => {
         btn.addEventListener('click', function() {
             document.querySelector('.size-btn.active')?.classList.remove('active');
@@ -362,26 +440,276 @@ document.addEventListener('DOMContentLoaded', function() {
             },
             modifiers: [
                 interact.modifiers.restrictRect({
-                    // ИСПРАВЛЕНО: Теперь принт заперт строго в границах футболки
                     restriction: '.product-wrapper', 
                     endOnly: false
                 })
             ]
         });
-});
 
-// Сохранение концепта в PNG
-document.getElementById('save-btn').addEventListener('click', function() {
-    const container = document.querySelector('.main-image-container');
-    const options = { backgroundColor: null, useCORS: true, scale: 2 };
-    
-    html2canvas(container, options).then(canvas => {
-        const link = document.createElement('a');
-        link.download = `constructor-design-${new Date().getTime()}.png`;
-        link.href = canvas.toDataURL("image/png");
-        link.click();
-    }).catch(err => {
-        console.error("Ошибка сохранения:", err);
+    const constructorModal = document.getElementById('constructorModal');
+    const closeConstructorModal = document.getElementById('closeConstructorModal');
+    const constructorForm = document.getElementById('constructorOrderForm');
+    const constructorSuccess = document.getElementById('constructorSuccessMessage');
+
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
+    document.getElementById('send-btn').addEventListener('click', function(e) {
+        e.preventDefault();
+        constructorModal.style.display = "block";
+        constructorForm.style.display = "flex";
+        constructorSuccess.style.display = "none";
+        constructorForm.reset(); 
+    });
+
+    closeConstructorModal.addEventListener('click', function() {
+        constructorModal.style.display = "none";
+    });
+
+    window.addEventListener('click', function(event) {
+        if (event.target == constructorModal) {
+            constructorModal.style.display = "none";
+        }
+    });
+
+    constructorForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const submitBtn = this.querySelector('.order-btn');
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'ОТПРАВКА...';
+        
+        const formData = {
+            name: document.getElementById('constructorName').value,
+            phone: document.getElementById('constructorPhone').value,
+            email: document.getElementById('constructorEmail').value,
+            comment: document.getElementById('constructorComment').value,
+            design_info: {
+                product: document.querySelector('.tab-btn.active')?.innerText || 'ФУТБОЛКА',
+                color: document.getElementById('hex-input').value,
+                size: document.getElementById('current-size').innerText,
+                side: document.querySelector('.mini-preview.active')?.dataset.side || 'front',
+                customization_type: document.querySelector('[data-cust].active')?.dataset.cust || 'classic',
+                pattern: document.querySelector('[data-pattern].active')?.dataset.pattern || null
+            }
+        };
+
+        console.log('Отправка данных:', formData);
+
+        fetch('/constructor/create-order/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCookie('csrftoken')
+            },
+            body: JSON.stringify(formData)
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log('Ответ сервера:', data);
+            
+            if (data.status === 'success') {
+                constructorForm.style.display = "none";
+                constructorSuccess.style.display = "block";
+                
+                setTimeout(function() {
+                    constructorModal.style.display = "none";
+                    constructorForm.style.display = "flex";
+                    constructorSuccess.style.display = "none";
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = 'ОТПРАВИТЬ ЗАЯВКУ';
+                }, 3000);
+            } else {
+                alert('Ошибка: ' + data.message);
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'ОТПРАВИТЬ ЗАЯВКУ';
+            }
+        })
+        .catch(error => {
+            console.error('Ошибка:', error);
+            alert('Произошла ошибка при отправке заявки. Попробуйте еще раз.');
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'ОТПРАВИТЬ ЗАЯВКУ';
+        });
+    });
+
+    // === СОХРАНЕНИЕ ДИЗАЙНА С ПРАВИЛЬНЫМ НАЛОЖЕНИЕМ ПАТТЕРНОВ ===
+    document.getElementById('save-btn').addEventListener('click', function() {
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+        
+        const productImg = document.getElementById('product-img');
+        const colorOverlay = document.getElementById('color-overlay');
+        const tieDyeOverlay = document.getElementById('tie-dye-overlay');
+        const patternOverlay = document.getElementById('pattern-overlay');
+        const printContainer = document.getElementById('print-container');
+        const printLayer = document.getElementById('print-layer');
+        
+        const scale = 3;
+        const imgWidth = 500;
+        const imgHeight = 500;
+        canvas.width = imgWidth * scale;
+        canvas.height = imgHeight * scale;
+        ctx.scale(scale, scale);
+        
+        const img = new Image();
+        img.crossOrigin = 'anonymous';
+        img.src = productImg.src;
+        
+        img.onload = function() {
+            // 1. Базовое изображение
+            ctx.drawImage(img, 0, 0, imgWidth, imgHeight);
+            
+            // 2. Цвет (с обрезкой по форме)
+            const color = colorOverlay.style.backgroundColor || 'rgba(255,255,255,1)';
+            if (color !== 'rgba(255, 255, 255, 1)' && color !== '#ffffff' && color !== 'rgb(255, 255, 255)') {
+                const tempCanvas = document.createElement('canvas');
+                tempCanvas.width = imgWidth;
+                tempCanvas.height = imgHeight;
+                const tempCtx = tempCanvas.getContext('2d');
+                
+                tempCtx.fillStyle = color;
+                tempCtx.fillRect(0, 0, imgWidth, imgHeight);
+                tempCtx.globalCompositeOperation = 'destination-in';
+                tempCtx.drawImage(img, 0, 0, imgWidth, imgHeight);
+                
+                ctx.globalCompositeOperation = 'multiply';
+                ctx.drawImage(tempCanvas, 0, 0, imgWidth, imgHeight);
+                ctx.globalCompositeOperation = 'source-over';
+            }
+            
+            // 3. Паттерны (с обрезкой по форме)
+            function drawPatterns(callback) {
+                // Проверяем patternOverlay (для пятен)
+                if (patternOverlay.style.display !== 'none' && patternOverlay.style.backgroundImage) {
+                    const bgImage = patternOverlay.style.backgroundImage;
+                    const urlMatch = bgImage.match(/url\(["']?(.*?)["']?\)/);
+                    if (urlMatch && urlMatch[1]) {
+                        const patternImg = new Image();
+                        patternImg.crossOrigin = 'anonymous';
+                        patternImg.src = urlMatch[1];
+                        patternImg.onload = function() {
+                            const tempCanvas = document.createElement('canvas');
+                            tempCanvas.width = imgWidth;
+                            tempCanvas.height = imgHeight;
+                            const tempCtx = tempCanvas.getContext('2d');
+                            
+                            tempCtx.drawImage(patternImg, 0, 0, imgWidth, imgHeight);
+                            tempCtx.globalCompositeOperation = 'destination-in';
+                            tempCtx.drawImage(img, 0, 0, imgWidth, imgHeight);
+                            
+                            ctx.globalAlpha = 0.5;
+                            ctx.drawImage(tempCanvas, 0, 0, imgWidth, imgHeight);
+                            ctx.globalAlpha = 1.0;
+                            callback();
+                        };
+                        patternImg.onerror = function() { callback(); };
+                        return;
+                    }
+                }
+                
+                // Проверяем tieDyeOverlay (для спирали и полосок)
+                if (tieDyeOverlay.style.display !== 'none' && tieDyeOverlay.style.backgroundImage) {
+                    const bgImage = tieDyeOverlay.style.backgroundImage;
+                    const urlMatch = bgImage.match(/url\(["']?(.*?)["']?\)/);
+                    if (urlMatch && urlMatch[1]) {
+                        const tieImg = new Image();
+                        tieImg.crossOrigin = 'anonymous';
+                        tieImg.src = urlMatch[1];
+                        tieImg.onload = function() {
+                            const tempCanvas = document.createElement('canvas');
+                            tempCanvas.width = imgWidth;
+                            tempCanvas.height = imgHeight;
+                            const tempCtx = tempCanvas.getContext('2d');
+                            
+                            tempCtx.drawImage(tieImg, 0, 0, imgWidth, imgHeight);
+                            tempCtx.globalCompositeOperation = 'destination-in';
+                            tempCtx.drawImage(img, 0, 0, imgWidth, imgHeight);
+                            
+                            ctx.globalCompositeOperation = 'multiply';
+                            ctx.globalAlpha = 0.7;
+                            ctx.drawImage(tempCanvas, 0, 0, imgWidth, imgHeight);
+                            ctx.globalAlpha = 1.0;
+                            ctx.globalCompositeOperation = 'source-over';
+                            callback();
+                        };
+                        tieImg.onerror = function() { callback(); };
+                        return;
+                    }
+                }
+                callback();
+            }
+            
+            // 4. Принт (с обрезкой по форме)
+            function drawPrint(callback) {
+                if (printContainer.style.display !== 'none' && printLayer.src) {
+                    const printImg = new Image();
+                    printImg.crossOrigin = 'anonymous';
+                    printImg.src = printLayer.src;
+                    
+                    printImg.onload = function() {
+                        const containerRect = printContainer.getBoundingClientRect();
+                        const wrapperRect = document.querySelector('.product-wrapper').getBoundingClientRect();
+                        
+                        const tempCanvas = document.createElement('canvas');
+                        tempCanvas.width = imgWidth;
+                        tempCanvas.height = imgHeight;
+                        const tempCtx = tempCanvas.getContext('2d');
+                        
+                        const relX = (containerRect.left - wrapperRect.left) / wrapperRect.width;
+                        const relY = (containerRect.top - wrapperRect.top) / wrapperRect.height;
+                        const relWidth = containerRect.width / wrapperRect.width;
+                        const relHeight = containerRect.height / wrapperRect.height;
+                        
+                        tempCtx.drawImage(
+                            printImg,
+                            relX * imgWidth,
+                            relY * imgHeight,
+                            relWidth * imgWidth,
+                            relHeight * imgHeight
+                        );
+                        
+                        tempCtx.globalCompositeOperation = 'destination-in';
+                        tempCtx.drawImage(img, 0, 0, imgWidth, imgHeight);
+                        
+                        ctx.drawImage(tempCanvas, 0, 0, imgWidth, imgHeight);
+                        callback();
+                    };
+                    printImg.onerror = function() { callback(); };
+                } else {
+                    callback();
+                }
+            }
+            
+            function downloadImage() {
+                const link = document.createElement('a');
+                link.download = `constructor-design-${new Date().getTime()}.png`;
+                link.href = canvas.toDataURL("image/png");
+                link.click();
+            }
+            
+            drawPatterns(function() {
+                drawPrint(function() {
+                    downloadImage();
+                });
+            });
+        };
+        
+        img.onerror = function() {
+            alert('Ошибка загрузки изображения. Попробуйте еще раз.');
+        };
     });
 });
 </script>

@@ -5,3 +5,4 @@ class VerennikAdminSite(AdminSite):
     site_header = "VERENNIK Администрация"
     site_title = "VERENNIK"
     index_title = "Панель управления"
+
